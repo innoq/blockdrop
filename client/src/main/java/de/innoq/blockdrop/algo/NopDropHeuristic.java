@@ -3,9 +3,10 @@ package de.innoq.blockdrop.algo;
 import java.util.Collections;
 import java.util.List;
 
+import de.innoq.blockdrop.algo.heuristics.Heuristic;
 import de.innoq.blockdrop.model.Point;
 
-public class NopDropHeuristic implements DropHeuristic {
+public class NopDropHeuristic implements Heuristic {
 
 	@Override
 	public List<Operation> calculateMoves(Point[] currentBlock, Point[] fixed) {
