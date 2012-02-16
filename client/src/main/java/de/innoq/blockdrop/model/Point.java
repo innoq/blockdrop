@@ -51,5 +51,7 @@ public class Point {
        return d;
      }
      
- 	
+     public static Point point (int x, int y, int z) {
+    	 return new Point (x,y,z);
+     }
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static de.innoq.blockdrop.model.Point.*;
 
 import de.innoq.blockdrop.model.Point;
 
@@ -25,6 +26,12 @@ public class ParserTest {
 		Point[] result = p.parseNextBlock("[next [[2, 1, 10], [2, 2, 10], [2, 3, 10], [2, 4, 10]]]");
 		
 		// Then
-		assertThat (Arrays.asList (result), hasItem (new Point (2,1,10)));
+		assertThat (Arrays.asList (result), contains(
+				point (2,1,10),
+				point (2,2,10),
+				point (2,3,10),
+				point (2,4,10)
+				));
 	}
+	
 }
