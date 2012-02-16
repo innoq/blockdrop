@@ -6,7 +6,6 @@ import javax.ws.rs.core.Context;
 
 import com.sun.jersey.api.core.ResourceConfig;
 
-import de.innoq.blockdrop.Client;
 import de.innoq.blockdrop.model.Point;
 
 @Path("/")
