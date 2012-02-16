@@ -4,20 +4,7 @@
 		<script src="js/Three.js">
 		</script>
 		<script>
-		    window.requestAnimFrame = (function(callback){
-		        return window.requestAnimationFrame ||
-		        window.webkitRequestAnimationFrame ||
-		        window.mozRequestAnimationFrame ||
-		        window.oRequestAnimationFrame ||
-		        window.msRequestAnimationFrame ||
-		        function(callback){
-		            window.setTimeout(callback, 1000 / 60);
-		        };
-		    })();
-
 		    window.onload = function(){
-		        var angularSpeed = 0.2; // revolutions per second
-		        var lastTime = 0;
 
 		        var renderer = new THREE.WebGLRenderer();
 		        renderer.setSize(window.innerWidth, window.innerHeight);
