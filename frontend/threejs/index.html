@@ -2,6 +2,7 @@
 <html>
     <head>
 		<script src="js/Three.js">
+		
 		</script>
 		<script>
 		    window.onload = function(){
@@ -9,22 +10,48 @@
 		        var renderer = new THREE.WebGLRenderer();
 		        renderer.setSize(window.innerWidth, window.innerHeight);
 		        document.body.appendChild(renderer.domElement);
-
-		        // camera
+		
 		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 1000);
-		        camera.position.y = -600;
-		        camera.position.z = 600;
-		        camera.rotation.x = 45 * (Math.PI / 180);
-
+				camera.position.y = -600;
+				camera.position.z = 600;
+				camera.rotation.x = 45 * (Math.PI / 180);
+				
 		        // scene
-		        var scene = new THREE.Scene();
+		        var scene = new THREE.Scene();	
 
 		        // plane
-		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshBasicMaterial({
+		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
 		            color: 0xeeeeee
 		        }));
 		        plane.overdraw = true;
 		        scene.add(plane);
+		
+				// COORDINATE SYS
+				var lineGeometry = new THREE.Geometry();
+				lineGeometry.vertices.push( new THREE.Vertex() );
+				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 1000, 0 ) ) );
+
+				var line;
+
+				// x
+
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0xff0000 } ) );
+				line.rotation.z = - Math.PI / 2;
+				scene.add( line );
+
+				// y
+
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x00ff00 } ) );
+				scene.add( line );
+
+				// z
+
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+				line.rotation.x = Math.PI / 2;
+				scene.add( line );
+				
+				// -----------------------------------------
+				
 		
 				var cube = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
 				               new THREE.MeshBasicMaterial({color: 0xff0000}));

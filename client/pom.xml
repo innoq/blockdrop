@@ -4,7 +4,7 @@
 	<groupId>de.innoq.blockdrop</groupId>
 	<artifactId>client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
+ 
 
 	<build>
 		<plugins>

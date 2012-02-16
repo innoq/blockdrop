@@ -7,13 +7,17 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import de.innoq.blockdrop.algo.DropHeuristic;
+import de.innoq.blockdrop.algo.HeuristicDrivenResponder;
+import de.innoq.blockdrop.algo.NopDropHeuristic;
+
 public class Client {
 	
 	ServerSocket    listner;
 	Socket          socket;	
 	PrintWriter     outputWriter;
 	BufferedReader  inputReader;
-    Parser parser = new Parser();
+
 	int             port;
 	boolean         servermode;
 
@@ -28,34 +32,11 @@ public class Client {
 	public void run() {
 		try {
 			connect();
-			Runnable reader=new Runnable() {				
-				@Override
-				public void run() {
-					String input;
-					try {
-						System.out.println("Waiting for network input");
-						
-						
-						while((input=inputReader.readLine())!=null) {
-							System.out.println("NET:"+input);
-							if(input.startsWith("echo!")) {
-								outputWriter.println(input.substring(5));
-							}
-							if (input.startsWith ("[next")) {
-								parser.parseNextBlock (input);
-								System.out.println ("Server has send next block: "+ input);
-							}
-							
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			// Automatically responses to "next" Messages from the server.
+			Runnable reader = new HeuristicDrivenResponder(inputReader, outputWriter);
 
-				}
-			};
-
-			Runnable writer=new Runnable() {
+			// Read stdin and pipes output to Server
+			Runnable writer= new Runnable() {
 				@Override
 				public void run() {
 					BufferedReader stdin=new BufferedReader(new InputStreamReader(System.in));

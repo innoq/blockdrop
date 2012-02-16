@@ -15,7 +15,9 @@ public enum Operation {
 	minusRotY ("-ry"),
 	
 	plusRotZ ("+rz"),
-	minusRotZ ("-rz");
+	minusRotZ ("-rz"),
+	
+	drop("drop");
 	
 	private String representation;
 
