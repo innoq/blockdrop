@@ -2,68 +2,108 @@
 <html>
     <head>
 		<script src="js/Three.js">
+		
 		</script>
 		<script>
-		    window.requestAnimFrame = (function(callback){
-		        return window.requestAnimationFrame ||
-		        window.webkitRequestAnimationFrame ||
-		        window.mozRequestAnimationFrame ||
-		        window.oRequestAnimationFrame ||
-		        window.msRequestAnimationFrame ||
-		        function(callback){
-		            window.setTimeout(callback, 1000 / 60);
-		        };
-		    })();
+			
+			function drawCoordinateSystem(scene) {
+				// COORDINATE SYS
+				var line, lineGeometry;
 
+				// x - red
+				lineGeometry = new THREE.Geometry();
+				lineGeometry.vertices.push( new THREE.Vertex() );
+				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 1000, 0, 0 ) ) );
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0xff0000 } ) );
+				scene.add( line );
+
+				// y - green
+				lineGeometry = new THREE.Geometry();
+				lineGeometry.vertices.push( new THREE.Vertex() );
+				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 1000, 0 ) ) );
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x00ff00 } ) );
+				scene.add( line );
+
+				// z - blue
+				lineGeometry = new THREE.Geometry();
+				lineGeometry.vertices.push( new THREE.Vertex() );
+				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
+				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+				scene.add( line );
+			}
+			
+			function drawBaseGrid(scene) {
+				var line, lineGeo, p1, p2;
+				
+				for (var i = 100; i <= 500; i = i + 100) {
+					p1 = new THREE.Vertex( new THREE.Vector3( 0, i, 0 ) );
+					p2 = new THREE.Vertex( new THREE.Vector3( 500, i, 0 ) );
+					lineGeo = new THREE.Geometry();
+					lineGeo.vertices.push( p1 );
+					lineGeo.vertices.push( p2 );
+				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+					scene.add( line );
+				}
+				
+				for (var i = 100; i <= 500; i = i + 100) {
+					p1 = new THREE.Vertex( new THREE.Vector3( i, 0, 0 ) );
+					p2 = new THREE.Vertex( new THREE.Vector3( i, 500, 0 ) );
+					lineGeo = new THREE.Geometry();
+					lineGeo.vertices.push( p1 );
+					lineGeo.vertices.push( p2 );
+				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+					scene.add( line );
+				}
+			}
+			
+			function drawCubes(scene) {
+				var cube = new THREE.Mesh(new THREE.CubeGeometry(100,100,100),
+				               new THREE.MeshBasicMaterial({color: 0x222222}));
+				cube.position.x = 450;
+				cube.position.y = 250;
+				cube.position.z = 50;
+				scene.add(cube);
+				
+			}
+		
 		    window.onload = function(){
+		
+				var WIDTH = 800;
+				var HEIGHT = 600;
+				
 		        var angularSpeed = 0.2; // revolutions per second
 		        var lastTime = 0;
 
 		        var renderer = new THREE.WebGLRenderer();
-		        renderer.setSize(window.innerWidth, window.innerHeight);
+		        renderer.setSize(WIDTH, HEIGHT);
 		        document.body.appendChild(renderer.domElement);
-
-		        // camera
-		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 1000);
-		        camera.position.y = -600;
-		        camera.position.z = 600;
-		        camera.rotation.x = 45 * (Math.PI / 180);
-
+		
+		        var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
+				camera.position.x = -500;
+				camera.position.y = -500;
+				camera.position.z = 500;
+				camera.rotation.x = 50 * (Math.PI / 180);
+				camera.rotation.y = -25 * (Math.PI / 180);
+				camera.rotation.z = -25 * (Math.PI / 180);
+								
 		        // scene
 		        var scene = new THREE.Scene();
 
-		        // plane
-		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshBasicMaterial({
+		        drawCoordinateSystem(scene);
+				
+				drawBaseGrid(scene);
+				
+				// plane
+		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
 		            color: 0xeeeeee
 		        }));
-		        plane.overdraw = true;
+				plane.position.x = 250;
+				plane.position.y = 250;
+				plane.overdraw = true;
 		        scene.add(plane);
-		
-				var cube = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
-				               new THREE.MeshBasicMaterial({color: 0xff0000}));
-				scene.add(cube);
 				
-
-				var cube2 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
-				           new THREE.MeshBasicMaterial({color: 0x00ff00}));
-				cube2.position.x = -50;
-				scene.add(cube2);
+				drawCubes(scene);
 				
-
-				var cube3 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
-				           new THREE.MeshBasicMaterial({color: 0x0000ff}));
-				cube3.position.x = 50;
-				cube3.position.y = 50;
-				scene.add(cube3);
-				
-
-				var cube4 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
-				           new THREE.MeshBasicMaterial({color: 0x000000}));
-				cube4.position.x = 50;
-				cube4.position.y = 50;
-				cube4.position.z = 50;
-				scene.add(cube4);
-
 		        // create wrapper object that contains three.js objects
 		        var three = {
 		            renderer: renderer,
@@ -77,7 +117,7 @@
 		</script>
     </head>
     <body>
-        <canvas id="myCanvas" width="578" height="200">
+        <canvas id="myCanvas" width="10" height="10">
         </canvas>
     </body>
 </html>
