@@ -25,6 +25,11 @@
 			<artifactId>junit-dep</artifactId>
 			<version>4.10</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 
 
 	</dependencies>
