@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+		<script src="js/Three.js">
+		</script>
+		<script>
+		    window.requestAnimFrame = (function(callback){
+		        return window.requestAnimationFrame ||
+		        window.webkitRequestAnimationFrame ||
+		        window.mozRequestAnimationFrame ||
+		        window.oRequestAnimationFrame ||
+		        window.msRequestAnimationFrame ||
+		        function(callback){
+		            window.setTimeout(callback, 1000 / 60);
+		        };
+		    })();
+
+		    window.onload = function(){
+		        var angularSpeed = 0.2; // revolutions per second
+		        var lastTime = 0;
+
+		        var renderer = new THREE.WebGLRenderer();
+		        renderer.setSize(window.innerWidth, window.innerHeight);
+		        document.body.appendChild(renderer.domElement);
+
+		        // camera
+		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 1000);
+		        camera.position.y = -600;
+		        camera.position.z = 600;
+		        camera.rotation.x = 45 * (Math.PI / 180);
+
+		        // scene
+		        var scene = new THREE.Scene();
+
+		        // plane
+		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshBasicMaterial({
+		            color: 0xeeeeee
+		        }));
+		        plane.overdraw = true;
+		        scene.add(plane);
+		
+				var cube = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
+				               new THREE.MeshBasicMaterial({color: 0xff0000}));
+				scene.add(cube);
+				
+
+				var cube2 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
+				           new THREE.MeshBasicMaterial({color: 0x00ff00}));
+				cube2.position.x = -50;
+				scene.add(cube2);
+				
+
+				var cube3 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
+				           new THREE.MeshBasicMaterial({color: 0x0000ff}));
+				cube3.position.x = 50;
+				cube3.position.y = 50;
+				scene.add(cube3);
+				
+
+				var cube4 = new THREE.Mesh(new THREE.CubeGeometry(50,50,50),
+				           new THREE.MeshBasicMaterial({color: 0x000000}));
+				cube4.position.x = 50;
+				cube4.position.y = 50;
+				cube4.position.z = 50;
+				scene.add(cube4);
+
+		        // create wrapper object that contains three.js objects
+		        var three = {
+		            renderer: renderer,
+		            camera: camera,
+		            scene: scene,
+		            plane: plane
+		        };
+				
+		        three.renderer.render(three.scene, three.camera);
+		    };
+		</script>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="578" height="200">
+        </canvas>
+    </body>
+</html>
