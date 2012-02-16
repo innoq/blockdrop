@@ -11,10 +11,14 @@
 		        renderer.setSize(window.innerWidth, window.innerHeight);
 		        document.body.appendChild(renderer.domElement);
 		
-		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 1000);
-				camera.position.y = -600;
-				camera.position.z = 600;
-				camera.rotation.x = 45 * (Math.PI / 180);
+		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 10000);
+				camera.position.x = -500;
+				camera.position.y = -500;
+				camera.position.z = 500;
+				camera.rotation.x = 50 * (Math.PI / 180);
+				camera.rotation.y = -25 * (Math.PI / 180);
+				camera.rotation.z = -25 * (Math.PI / 180);
+				
 				
 		        // scene
 		        var scene = new THREE.Scene();	
