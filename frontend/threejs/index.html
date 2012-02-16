@@ -19,15 +19,18 @@
 		
 
 		    window.onload = function(){
+			
+				var WIDTH = 800;
+				var HEIGHT = 600;
 				
 		        var angularSpeed = 0.2; // revolutions per second
 		        var lastTime = 0;
 
 		        var renderer = new THREE.WebGLRenderer();
-		        renderer.setSize(window.innerWidth, window.innerHeight);
+		        renderer.setSize(WIDTH, HEIGHT);
 		        document.body.appendChild(renderer.domElement);
 		
-		        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 45, 1000);
+		        var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 1000);
 				camera.position.y = -600;
 				camera.position.z = 600;
 				camera.rotation.x = 45 * (Math.PI / 180);
@@ -39,7 +42,7 @@
 		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
 		            color: 0xeeeeee
 		        }));
-		        plane.overdraw = true;
+				plane.overdraw = true;
 		        scene.add(plane);
 		
 				// COORDINATE SYS
@@ -107,7 +110,7 @@
 		</script>
     </head>
     <body>
-        <canvas id="myCanvas" width="578" height="200">
+        <canvas id="myCanvas" width="800" height="600">
         </canvas>
     </body>
 </html>
