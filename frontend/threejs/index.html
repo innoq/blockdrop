@@ -5,6 +5,54 @@
 		
 		</script>
 		<script>
+		
+			var WIDTH = 1000;
+			var HEIGHT = 800;
+			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
+			
+			var cube = new THREE.Mesh(new THREE.CubeGeometry(100,100,100),
+			               new THREE.MeshNormalMaterial());
+			var three;
+			
+			function cubeUp() {
+				var x, y;		
+			    x = cube.position.x;
+				cube.position.x = x + 100;
+				y = cube.position.y;
+				cube.position.y = y + 100;
+				cube.geometry.dynamic = true;
+				render();
+			}
+			
+			function cubeLeft() {
+				var y;		
+			    y = cube.position.y;
+				cube.position.y = y + 100;
+				cube.geometry.dynamic = true;
+				render();
+			}
+			
+			function cubeRight() {
+				var x;		
+			    x = cube.position.x;
+				cube.position.x = x + 100;
+				cube.geometry.dynamic = true;
+				render();
+			}
+			
+			function cubeDown() {
+				var x, y;		
+			    x = cube.position.x;
+				cube.position.x = x - 100;
+				y = cube.position.y;
+				cube.position.y = y - 100;
+				cube.geometry.dynamic = true;
+				render();
+			}
+			
+			function onDocumentKeyDown(event) {
+				
+			}
 			
 			function drawCoordinateSystem(scene) {
 				// COORDINATE SYS
@@ -27,9 +75,9 @@
 				// z - blue
 				lineGeometry = new THREE.Geometry();
 				lineGeometry.vertices.push( new THREE.Vertex() );
-				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
-				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
-				scene.add( line );
+ 				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
+ 				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+ 				scene.add( line );
 			}
 			
 			function drawBaseGrid(scene) {
@@ -57,21 +105,30 @@
 			}
 			
 			function drawCubes(scene) {
-				var cube = new THREE.Mesh(new THREE.CubeGeometry(100,100,100),
-				               new THREE.MeshBasicMaterial({color: 0x222222}));
 				cube.position.x = 450;
-				cube.position.y = 250;
+				cube.position.y = 450;
 				cube.position.z = 50;
-				scene.add(cube);
 				
+				// set the geometry to dynamic
+				// so that it allow updates
+				cube.geometry.dynamic = true;
+
+				// changes to the vertices
+				cube.geometry.__dirtyVertices = true;
+
+				// changes to the normals
+				cube.geometry.__dirtyNormals = true;
+				
+				scene.add(cube);
+			}
+			
+			function render() {
+				 three.renderer.render(three.scene, three.camera);
 			}
 		
 		    window.onload = function(){
-		
-				var WIDTH = 800;
-				var HEIGHT = 600;
-				
-		        var angularSpeed = 0.2; // revolutions per second
+			
+			    var angularSpeed = 0.2; // revolutions per second
 		        var lastTime = 0;
 
 		        var renderer = new THREE.WebGLRenderer();
@@ -79,13 +136,15 @@
 		        document.body.appendChild(renderer.domElement);
 		
 		        var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
-				camera.position.x = -500;
-				camera.position.y = -500;
-				camera.position.z = 500;
-				camera.rotation.x = 50 * (Math.PI / 180);
-				camera.rotation.y = -25 * (Math.PI / 180);
-				camera.rotation.z = -25 * (Math.PI / 180);
-								
+		        
+				camera.position.x = -750;
+				camera.position.y = -750;
+				camera.position.z = 1500;
+				camera.lookAt(new THREE.Vector3());
+				
+				camera.rotation.z = -39.25 * (Math.PI / 180);
+				
+				
 		        // scene
 		        var scene = new THREE.Scene();
 
@@ -105,19 +164,26 @@
 				drawCubes(scene);
 				
 		        // create wrapper object that contains three.js objects
-		        var three = {
+		        three = {
 		            renderer: renderer,
 		            camera: camera,
 		            scene: scene,
 		            plane: plane
 		        };
+		
+				render();
 				
-		        three.renderer.render(three.scene, three.camera);
+				document.addEventListener( 'keydown', onDocumentKeyDown, false );
+				
 		    };
 		</script>
     </head>
     <body>
         <canvas id="myCanvas" width="10" height="10">
         </canvas>
+		<input type="button" onClick="cubeLeft()" value="left" />
+		<input type="button" onClick="cubeUp()" value="up" />
+		<input type="button" onClick="cubeDown()" value="down" />
+		<input type="button" onClick="cubeRight()" value="right" />
     </body>
 </html>
