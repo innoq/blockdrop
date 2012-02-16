@@ -34,4 +34,26 @@ public class ParserTest {
 				));
 	}
 	
+	@Test
+	public void testParseBlocks() {
+		// When
+		Point[] result = p.parseBlocks("[blocks [[2,2,0],[2,2,1],[3,2,1],[2,2,2]]]");
+		
+		// Then
+		assertThat (Arrays.asList (result), contains(
+				point (2,2,0),
+				point (2,2,1),
+				point (3,2,1),
+				point (2,2,2)
+				));		
+		
+		
+	}
+	
+	@Test
+	public void testParseEmtpyBlocks() {
+		Point[] result = p.parseBlocks("[blocks []]]");
+		// Then
+		assertThat (result.length, is(0));
+	}
 }
