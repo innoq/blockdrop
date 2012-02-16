@@ -26,13 +26,13 @@ public class BlockDropResource {
 		
 		for (int i = 0; i < board.length; i++) {
 			Point point = board [i];
-			buffer.append ("{");
+			buffer.append ("[");
 			buffer.append (point.x);
 			buffer.append (",");
 			buffer.append (point.y);
 			buffer.append (",");
 			buffer.append (point.z);
-			buffer.append("}");
+			buffer.append("]");
 			if (i < board.length-1) {
 				buffer.append (",");
 			}
