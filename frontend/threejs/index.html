@@ -109,7 +109,7 @@ startLoop();
       }
             
       function renderPositions() {
-        var positions = JSON.parse(document.getElementById('input'));
+        var positions = JSON.parse(document.getElementById('input').value);
         update(positions);
       }
 			var frontCamera = false;
@@ -283,6 +283,11 @@ startLoop();
       function render() {
         three.renderer.render(three.scene, three.camera);
       }
+
+function clearMap() {
+	clearGrid();
+	render();
+}
 		         
 		
       window.onload = function(){
@@ -354,6 +359,7 @@ startLoop();
           <input type="button" onClick="cubeRight()" value="right" /> -->
           <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
           <input class="btn" type="button" onClick="startStopPolling()" value="Stop Polling" id="pollSwitch" />
+          <input class="btn" type="button" onClick="clearMap()" value="Clear Map" id="fieldClear" />
         </div>
         <div class="span4">
         <h2>Positions:</h2>
