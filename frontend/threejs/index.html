@@ -1,10 +1,51 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-		<script src="js/Three.js">
-		
-		</script>
+		<script src="js/Three.js"> </script>
 		<script>
+/**
+Ajax Request
+*/
+
+var xmlHttp = null;
+var count = 0;
+
+function getBoardInfo() {
+	var Url = "http://127.0.0.1:9998/board";
+	xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = processBoardRequest;
+	xmlHttp.open("GET", Url, true);
+	xmlHttp.send(null);
+}
+
+function processBoardRequest() {
+	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+		if (xmlHttp.responseText == "Not found") {
+			document.getElementById("infoText").value = "Nothing found";
+		} else {
+			var value = xmlHttp.responseText;
+            // TODO Start Parsing
+			count = count+1;
+			document.getElementById("debug").value = value+count;
+		}
+	}
+}
+
+var iFrequency = 500; // in ms
+var myInterval = 0;
+
+function startLoop() {
+	if(myInterval > 0) clearInterval(myInterval);  // stop
+	myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
+}
+getBoardInfo();
+startLoop();
+		
+		
+		
+		/**
+		THREE.js
+		*/
 		
 			var WIDTH = 1000;
 			var HEIGHT = 800;
@@ -175,7 +216,7 @@
 				
 				document.addEventListener( 'keydown', onDocumentKeyDown, false );
 				
-		    };
+		    };	
 		</script>
     </head>
     <body>
@@ -185,5 +226,6 @@
 		<input type="button" onClick="cubeUp()" value="up" />
 		<input type="button" onClick="cubeDown()" value="down" />
 		<input type="button" onClick="cubeRight()" value="right" />
+		<textarea id="debug" cols="40" rows="8"> </textarea>
     </body>
 </html>
