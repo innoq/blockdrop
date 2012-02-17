@@ -159,6 +159,7 @@ public class Util {
 					if (!first) {
 						buf.append(",");
 					}
+					first = false;
 					if (points[x][y][z] == 1) {
 						buf.append ("[");						
 						buf.append (x);

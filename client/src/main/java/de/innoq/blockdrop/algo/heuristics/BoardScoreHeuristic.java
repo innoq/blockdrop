@@ -54,9 +54,9 @@ public class BoardScoreHeuristic implements Heuristic {
 								currentBlock, xOffset, yOffset);
 
 						int newScore = scoreFunction.score(newBoard);
-						System.out.println("Score for " + x + "/" + y  +" rot "+ bestRot+" is "
+						System.out.println("Score for " + x + "/" + y  +" rot "+ rot+" is "
 								+ newScore);
-						System.out.println("Board for " + x + "/" + y +" rot "+ bestRot+ " is "
+						System.out.println("Board for " + x + "/" + y +" rot "+ rot+ " is "
 								+ Util.toString(newBoard));
 						if (newScore < bestScore) {
 							bestScore = newScore;

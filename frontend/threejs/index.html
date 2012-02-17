@@ -109,7 +109,7 @@ startLoop();
       }
             
       function renderPositions() {
-        var positions = JSON.parse(document.getElementById('input'));
+        var positions = JSON.parse(document.getElementById('input').value);
         update(positions);
       }
 			var frontCamera = false;
