@@ -47,9 +47,11 @@ function startStopPolling() {
 	if(polling) {
 		polling = false;
 		stopLoop();
+		document.getElementById("pollSwitch").value = "Start Polling";
 	} else {
 		polling = true;
 		startLoop();
+		document.getElementById("pollSwitch").value = "Stop Polling";
 	}
 }
 
@@ -351,6 +353,7 @@ startLoop();
           <input type="button" onClick="cubeDown()" value="down" />
           <input type="button" onClick="cubeRight()" value="right" /> -->
           <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
+          <input class="btn" type="button" onClick="startStopPolling()" value="Stop Polling" id="pollSwitch" />
         </div>
         <div class="span4">
         <h2>Positions:</h2>
