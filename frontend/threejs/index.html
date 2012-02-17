@@ -7,13 +7,14 @@
 		<script>
 		
 			var WIDTH = 1000;
-			var HEIGHT = 800;			
+			var HEIGHT = 800;
 			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
-			
-			var cube = new THREE.Mesh(new THREE.CubeGeometry(100,100,100),
-			               new THREE.MeshNormalMaterial());
-			var three;
-			
+			var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
+			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
+            
+			var cubes = new Array();
+			var three, cube;
+            
 			function cubeUp() {
 				var x, y;		
 			    x = cube.position.x;
@@ -49,7 +50,11 @@
 				cube.geometry.dynamic = true;
 				render();
 			}
-			
+            
+			function getPositions() {
+				return new Array([0,0,1], [1,1,0], [2,3,4]);	
+			}
+            
 			function cameraBack() {
 				camera.position.x = -750;
 				camera.position.y = -750;
@@ -68,22 +73,62 @@
 				camera.lookAt(new THREE.Vector3(0,0,350));
 				render();
 			}
-			
-			
+            
 			function clearGrid() {
+				for(var i = 0; i < cubes.length; i++) {
+					three.scene.removeObject(cubes[i]);
+				}
 				
+				cubes = new Array();
 			}
+            
+            function worldPos(pos) {
+              pos[0] = pos[0] + 50;
+              pos[1] = pos[1] + 50;
+              pos[2] = pos[2] + 50;
+              return pos;
+            }
 			
-			function drawCube(pos, scene) {
-				
+			function drawCube(pos) {
+              
+				var c = new THREE.Mesh(cubeGeo, cubeMaterial);
+                pos = worldPos(pos);
+                
+                c.position.x = pos[0];
+				c.position.y = pos[1];
+				c.position.z = pos[2];
+                
+                
+                // set the geometry to dynamic
+				// so that it allow updates
+				c.geometry.dynamic = true;
+
+				// changes to the vertices
+				c.geometry.__dirtyVertices = true;
+
+				// changes to the normals
+				c.geometry.__dirtyNormals = true;
+                
+				three.scene.add(c);
+				cubes.push(c);
 			}
 			
 			function update() {
+              
+				var positions;
 				
-			} 
+				clearGrid();
+				
+				positions = getPositions();
+				
+				for (var i = 0; i <= 1000; i+= 100) {
+					drawCube(new Array(0, 0, i + 50));
+				}
+                
+				render();
+			}
 			
-			
-			function drawCoordinateSystem(scene) {
+			function drawCoordinateSystem() {
 				// COORDINATE SYS
 				var line, lineGeometry;
 
@@ -92,24 +137,24 @@
 				lineGeometry.vertices.push( new THREE.Vertex() );
 				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 1000, 0, 0 ) ) );
 				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0xff0000 } ) );
-				scene.add( line );
+				three.scene.add( line );
 
 				// y - green
 				lineGeometry = new THREE.Geometry();
 				lineGeometry.vertices.push( new THREE.Vertex() );
 				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 1000, 0 ) ) );
 				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x00ff00 } ) );
-				scene.add( line );
+				three.scene.add( line );
 
 				// z - blue
 				// lineGeometry = new THREE.Geometry();
-				// 				lineGeometry.vertices.push( new THREE.Vertex() );
-				//  				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
-				//  				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
-				//  				scene.add( line );
+				// lineGeometry.vertices.push( new THREE.Vertex() );
+				// lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
+				// line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+				// three.scene.add( line );
 			}
 			
-			function drawBaseGrid(scene) {
+			function drawBaseGrid() {
 				var line, lineGeo, p1, p2;
 				
 				for (var i = 100; i <= 500; i = i + 100) {
@@ -119,7 +164,7 @@
 					lineGeo.vertices.push( p1 );
 					lineGeo.vertices.push( p2 );
 				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
-					scene.add( line );
+					three.scene.add( line );
 				}
 				
 				for (var i = 100; i <= 500; i = i + 100) {
@@ -129,14 +174,32 @@
 					lineGeo.vertices.push( p1 );
 					lineGeo.vertices.push( p2 );
 				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
-					scene.add( line );
+					three.scene.add( line );
 				}
 			}
+            
+            function addLight() {
+              // Lights
+
+				three.scene.add( new THREE.AmbientLight( 0x202020 ) );
+
+				var directionalLight = new THREE.DirectionalLight( 0xffffff );
+
+				directionalLight.position.x = Math.random() - 0.5;
+				directionalLight.position.y = Math.random() - 0.5;
+				directionalLight.position.z = Math.random() - 0.5;
+
+				directionalLight.position.normalize();
+
+				three.scene.add( directionalLight );
+            }
 			
-			function initCube(scene) {
+			function initCube() {
+              
+                cube = new THREE.Mesh(cubeGeo, cubeMaterial);
 				
-				cube.position.x = 450;
-				cube.position.y = 450;
+				cube.position.x = 50;
+				cube.position.y = 50;
 				cube.position.z = 50;
 				
 				// set the geometry to dynamic
@@ -149,7 +212,7 @@
 				// changes to the normals
 				cube.geometry.__dirtyNormals = true;
 				
-				scene.add(cube);
+				three.scene.add(cube);
 			}
 			  
 			
@@ -160,10 +223,7 @@
 		
 		    window.onload = function(){
 			
-			    var angularSpeed = 0.2; // revolutions per second
-		        var lastTime = 0;
-
-		        var renderer = new THREE.WebGLRenderer();
+			    var renderer = new THREE.WebGLRenderer({antialias: true});
 		        renderer.setSize(WIDTH, HEIGHT);
 		        document.body.appendChild(renderer.domElement);
  				
@@ -172,16 +232,13 @@
 				camera.position.z = 1500;
 
 				camera.up = new THREE.Vector3(0, 0, 1);
-				camera.lookAt(new THREE.Vector3(0,0,750));
+                
+				camera.lookAt(new THREE.Vector3(0, 0, 750));
 								
 				// scene
 		        var scene = new THREE.Scene();
 
-		        drawCoordinateSystem(scene);
-				
-				drawBaseGrid(scene);
-				
-				// plane
+		        // plane
 		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
 		            color: 0xeeeeee
 		        }));
@@ -190,7 +247,6 @@
 				plane.overdraw = true;
 				scene.add(plane);
 				
-				initCube(scene);
 				
 		        // create wrapper object that contains three.js objects
 		        three = {
@@ -199,8 +255,16 @@
 		            scene: scene,
 		            plane: plane
 		        };
-		
-				render();				
+                
+                drawCoordinateSystem();
+				
+				drawBaseGrid();
+                
+                addLight();
+                
+				initCube(scene);
+                
+				update();				
 		    };
 		</script>
     </head>
