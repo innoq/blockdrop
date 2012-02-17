@@ -51,6 +51,11 @@
 				render();
 			}
             
+            function renderPositions() {
+              var positions = JSON.parse(document.getElementById('input'));
+              update(positions);
+            }
+            
 			function getPositions() {
 				return new Array([0,0,1], [1,1,0], [2,3,4]);	
 			}
@@ -113,10 +118,8 @@
 				cubes.push(c);
 			}
 			
-			function update() {
+			function update(positions) {
               
-				var positions;
-				
 				clearGrid();
 				
 				positions = getPositions();
@@ -262,7 +265,7 @@
                 
                 addLight();
                 
-				initCube(scene);
+				// initCube(scene);
                 
 				update();				
 		    };
@@ -271,11 +274,17 @@
     <body>
         <canvas id="myCanvas" width="10" height="10">
         </canvas>
+        <hr/>
+        <h2>Controls:</h2>
 		<input type="button" onClick="cubeLeft()" value="left" />
 		<input type="button" onClick="cubeUp()" value="up" />
 		<input type="button" onClick="cubeDown()" value="down" />
 		<input type="button" onClick="cubeRight()" value="right" />
 		<input type="button" onClick="cameraBack()" value="back" />
 		<input type="button" onClick="cameraFront()" value="front" />
+        <br />
+        <h2>Positions:</h2>
+        <textarea id="input"></textarea>
+		<input type="button" onClick="renderPositions()" value="Render" />
     </body>
 </html>
