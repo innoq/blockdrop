@@ -48,7 +48,7 @@ public class Util {
 	public static byte[][][] dropBlockOnOffset(byte[][][] board, Point[] block,
 			int xOffset, int yOffset) {
 		
-		byte[][][] result = Arrays.copyOf(board,board.length);
+		byte[][][] result = copyBoard(board);
 		
 	
 		int zOffset = 0;
@@ -56,13 +56,17 @@ public class Util {
 		while (testFits (board, block, xOffset,yOffset,zOffset)) {
 			zOffset -= 1;
 		}
-		
+		if (zOffset != 0 )
 		zOffset +=1;
 		
 		// Merge the Block into the board on its final position
 		
 		for (Point p : block) {
+			if (p.z+zOffset < 10) {
 			result [p.x+xOffset][p.y + yOffset][p.z+zOffset] = 1;
+			} else {
+				System.out.println ("Autsch! Stacking this would reach the end.");
+			}
 		}
 		
 		return result;
@@ -109,4 +113,6 @@ public class Util {
 		}
 		return new Point(mx, my, mz);
 	}
+	
+	
 }

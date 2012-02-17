@@ -26,6 +26,7 @@ public class HeuristicTetrisListener implements TetrisListener {
 	@Override
 	public void next(Point[] currentBlock, Point[] fixed) {
 		List<Operation> operations = heuristic.calculateMoves(currentBlock, fixed);
+		System.out.println ("Operatiosn to send is "+ operations);
 		server.doOperations(operations);
 	}
 

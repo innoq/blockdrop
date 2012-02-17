@@ -1,13 +1,19 @@
 package de.innoq.blockdrop.algo.heuristics;
 
-import java.util.Arrays;
+import static de.innoq.blockdrop.algo.Util.dropBlockOnOffset;
+import static de.innoq.blockdrop.algo.Util.maxCoords;
+import static de.innoq.blockdrop.algo.Util.minCoords;
+import static de.innoq.blockdrop.algo.Util.pointsToGrid;
+import static de.innoq.blockdrop.algo.Util.testFits;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import de.innoq.blockdrop.algo.HeightScoreFunction;
+import de.innoq.blockdrop.algo.HolesScoreFunction;
 import de.innoq.blockdrop.algo.Operation;
 import de.innoq.blockdrop.algo.ScoreFunction;
 import de.innoq.blockdrop.model.Point;
-import static de.innoq.blockdrop.algo.Util.*;
 
 /**
  * A Heuristic that tries each possible Position and Orientation for a tile and
@@ -17,7 +23,7 @@ import static de.innoq.blockdrop.algo.Util.*;
 public class BoardScoreHeuristic implements Heuristic {
 
 	// Score Function can later be replaced with other ones
-	private ScoreFunction scoreFunction = new HeightScoreFunction();
+	private ScoreFunction scoreFunction = new HolesScoreFunction();
 
 	@Override
 	public List<Operation> calculateMoves(Point[] currentBlock, Point[] fixed) {
@@ -27,6 +33,9 @@ public class BoardScoreHeuristic implements Heuristic {
 		Point minCoords = minCoords(currentBlock);
 		Point maxCoods = maxCoords(currentBlock);
 
+		int bestScore = Integer.MAX_VALUE;
+		int bestX = -1; int bestY = -1;
+		
 		byte[][][] board = pointsToGrid(fixed);
 		for (int x = 0; x < 5; x++) {
 			for (int y = 0; y < 5; y++) {
@@ -34,24 +43,49 @@ public class BoardScoreHeuristic implements Heuristic {
 				int xOffset = x - minCoords.x;
 				int yOffset = y - minCoords.y;
 
-				byte[][][] newBoard = dropBlockOnOffset(board, currentBlock,
+				// Past der Block Ÿberhaupt an der aktuellen Position?
+				if (testFits(board, currentBlock, xOffset, yOffset, 0)) {
+					// Falls Ja : Drop: 
+					byte[][][] newBoard = dropBlockOnOffset(board, currentBlock,
 						xOffset, yOffset);
-
+					
+					int newScore = scoreFunction.score(newBoard);
+					System.out.println ("Score for "+x+"/"+y+" is "+ newScore);
+					System.out.println ("Board for "+x+"/"+y+" is "+ newBoard);
+					if (newScore < bestScore) {
+						bestScore = newScore;
+						bestX = x;
+						bestY = y;
+					}
+				}
 			}
+		
 		}
-
-		// 1. currentBlock normaliziere vordere, linke Untere ecke der convexen
-		// HŸlle is 0/0/0
-		// 2. Erzeuge rotationen des Blocks ?
-		// For each possible Orientation
-		// TODO Auto-generated method stub
-		return null;
+		if (bestX == -1 || bestY == -1) {
+			System.out.println ("Ups. NoMove  found?");
+			bestX = 4; bestY = 4; // Move into center...
+			
+		}
+		System.out.println ("Best Moves seems to be to "+bestX + "/"+ bestY);
+		// translate into Moves.
+		List<Operation> result = new LinkedList<Operation>();
+		for (int i = 0; i < minCoords.x - bestX; i++) {
+			result.add(Operation.minusX);
+		}
+		for (int i = 0; i < bestX- minCoords.x; i++ ) {
+			result.add(Operation.plusX);
+		}
+		for (int i = 0; i < bestY- minCoords.y; i++ ) {
+			result.add(Operation.plusY);
+		}
+		for (int i = 0; i <  minCoords.y-bestY; i++ ) {
+			result.add(Operation.minusY);
+		}
+		
+		return result;
 	}
 
 
-
-
-	}
 
 	
 
