@@ -20,6 +20,9 @@ public class Util {
 	}
 	
 	
+	/**
+	 * Create a deep copy of an board.
+	 */
 	public static  byte[][][] copyBoard (byte[][][] board) {
 		byte[][][] result = Arrays.copyOf(board,board.length);
 		for (int x = 0;x  < result.length ; x++) {
@@ -33,7 +36,7 @@ public class Util {
 	
 	
 	/**
-	 * Move the Block by xOffset,yOfsset and drop in on the fixed Tiles. Return
+	 * Move the Block by xOffset, yOfsset and drop it on the fixed Tiles. Return
 	 * a new Baord representing the Result;
 	 * 
 	 * @param board
@@ -46,6 +49,15 @@ public class Util {
 			int xOffset, int yOffset) {
 		
 		byte[][][] result = Arrays.copyOf(board,board.length);
+		
+	
+		int zOffset = 0;
+		while (testFits (board, currentBlock, xOffset,yOffset,zOffset)) {
+			zOffset += 1;
+		}
+		
+		
+		
 	//	Point[] result = new Point[board.length + currentBlock.length];
 
 		// Point]
@@ -53,7 +65,19 @@ public class Util {
 		// paramInt3)
 		// TODO Auto-generated method stub
 		return null;
-		
+	}
+	
+	public static boolean testFits (byte[][][] board, Point[] block,int xOffset, int yOffset, int zOffset) {
+		for (Point p : block) {
+			int newX = p.x + xOffset;
+			int newY = p.y + yOffset;
+			int newZ = p.z + zOffset;
+			if (newX < 0 || newX > 4 || newY < 0 || newY > 4 || newZ < 0) return false; // Ein Block ist nicht mehr in der Ebene
+			if (newZ < 10) { // Was noch oben rausragt ist in Ordnung
+				if (board [newX][newY][newZ] == 1) return false;
+			}
+		}
+		return true;		
 	}
 	
 	
