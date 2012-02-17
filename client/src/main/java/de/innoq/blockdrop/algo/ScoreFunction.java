@@ -1,6 +1,5 @@
 package de.innoq.blockdrop.algo;
 
-import de.innoq.blockdrop.model.Point;
 
 public interface ScoreFunction {
 
@@ -10,5 +9,5 @@ public interface ScoreFunction {
 	 * @param board
 	 * @return
 	 */
-	public int score(Point[] board);
+	public int score(byte[][][] board);
 }

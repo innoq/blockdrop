@@ -49,7 +49,7 @@ public class Util {
 	public static byte[][][] dropBlockOnOffset(byte[][][] board, Point[] block,
 			int xOffset, int yOffset) {
 		
-		byte[][][] result = Arrays.copyOf(board,board.length);
+		byte[][][] result = copyBoard(board);
 		
 	
 		int zOffset = 0;
@@ -57,13 +57,17 @@ public class Util {
 		while (testFits (board, block, xOffset,yOffset,zOffset)) {
 			zOffset -= 1;
 		}
-		
+		if (zOffset != 0 )
 		zOffset +=1;
 		
 		// Merge the Block into the board on its final position
 		
 		for (Point p : block) {
+			if (p.z+zOffset < 10) {
 			result [p.x+xOffset][p.y + yOffset][p.z+zOffset] = 1;
+			} else {
+				System.out.println ("Autsch! Stacking this would reach the end.");
+			}
 		}
 		
 		return result;
@@ -110,7 +114,43 @@ public class Util {
 		}
 		return new Point(mx, my, mz);
 	}
-
+	
+	
+//	public static Point[][] rotations (Point[] block) {
+//		return null;
+//	}
+//	
+//	// Rotation um die Z Achse, "Gegen den Uhrzeigersinn"
+//	public static Point[] rotZ (Point [] block) {
+//		// Defensive copy
+//		LinkedList<Point> result = new LinkedList<Point>();
+//		Point minCoords = minCoords(block);
+//		
+//		for (Point p : block) {
+//			// Verschiebe Block zu 0/0
+//			int transX = p.x - minCoords.x;
+//			int transY = p.y - minCoords.y;
+//			
+//			int newy = transX;
+//			int newX = -transY;
+//			
+//			result.add()
+//			
+//			// 1/1 => -1,1
+//			 // 0/0=>
+//			
+//			
+//		}
+//		
+//		
+//		
+//		
+//		
+//		return block;
+//		
+//		
+//		
+//	}
 	
 	//** Render the JSON Representation for this board **/
 	public static String toString (byte[][][] points) {
