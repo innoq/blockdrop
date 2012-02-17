@@ -36,7 +36,7 @@ public class HeuristicTetrisListener implements TetrisListener {
 		}
 		server.doOperations(operations);
 		handled += 1;
-		System.out.println ("Dropped "+handled + handled);
+		System.out.println ("Dropped "+handled);
 	}
 
 }
