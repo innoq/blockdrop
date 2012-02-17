@@ -20,10 +20,9 @@ function getBoardInfo() {
 function processBoardRequest() {
 	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 		if (xmlHttp.responseText == "Not found") {
-			document.getElementById("infoText").value = "Nothing found";
+			document.getElementById("infoField").innerHTML = "Nothing found";
 		} else {
 			var value = JSON.parse(xmlHttp.responseText);
-			document.getElementById("debug").value = value;
 			update(value);
 		}
 	}
@@ -296,8 +295,7 @@ startLoop();
                 addLight();
                 
 				initCube(scene);
-                
-				update();				
+                				
 		    };
 		</script>
     </head>
@@ -310,6 +308,6 @@ startLoop();
 		<input type="button" onClick="cubeRight()" value="right" />
 		<input type="button" onClick="cameraBack()" value="back" />
 		<input type="button" onClick="cameraFront()" value="front" />
-		<textarea id="debug" cols="40" rows="8"> </textarea>
+		<div id="infoField"></div>
     </body>
 </html>
