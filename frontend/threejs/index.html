@@ -52,6 +52,7 @@ function processBoardRequest() {
       var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
             
       var cubes = new Array();
+      var cage = new Array();
       var three, cube;
             
       function cubeUp() {
@@ -91,7 +92,7 @@ function processBoardRequest() {
       }
             
       function renderPositions() {
-        var positions = JSON.parse(document.getElementById('input'));
+        var positions = JSON.parse(document.getElementById('input').value);
         update(positions);
       }
 			var frontCamera = false;
@@ -193,11 +194,105 @@ function processBoardRequest() {
         three.scene.add( line );
 
         // z - blue
-        // lineGeometry = new THREE.Geometry();
-        // lineGeometry.vertices.push( new THREE.Vertex() );
-        // lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
-        // line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
-        // three.scene.add( line );
+        lineGeometry = new THREE.Geometry();
+        lineGeometry.vertices.push( new THREE.Vertex() );
+        lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 10000 ) ) );
+        line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+        three.scene.add( line );
+      }
+      
+      function drawCage() {
+        var line, lineGeo, p1, p2;
+        
+        // PILLARS
+
+        p1 = new THREE.Vertex( new THREE.Vector3( 500, 0, 0 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 500, 0, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 500, 500, 0 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 500, 500, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 0, 500, 0 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 0, 500, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 0, 0, 0 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        // TOP
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 500, 0, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 0, 500, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 0, 500, 1000 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 500, 500, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+        
+        p1 = new THREE.Vertex( new THREE.Vector3( 500, 0, 1000 ) );
+        p2 = new THREE.Vertex( new THREE.Vector3( 500, 500, 1000 ));
+        lineGeo = new THREE.Geometry();
+        lineGeo.vertices.push( p1 );
+        lineGeo.vertices.push( p2 );
+        line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+        three.scene.add( line );
+        cage.push(line);
+      }
+      
+      function toggleCage() {
+        var show = true;
+        
+        for(var i = 0; i < cage.length; i++) {
+          if (show) {
+            three.scene.add(cage[i]);
+          } else {
+            three.scene.removeObject(cage[i]);
+          }
+        }
+        
+        render();
       }
 			
       function drawBaseGrid() {
@@ -223,7 +318,7 @@ function processBoardRequest() {
           three.scene.add( line );
         }
       }
-            
+      
       function addLight() {
         // Lights
 
@@ -287,7 +382,7 @@ function processBoardRequest() {
 
         // plane
         var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
-          color: 0xeeeeee
+          color: 0xffffff
         }));
         plane.position.x = 250;
         plane.position.y = 250;
