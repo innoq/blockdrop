@@ -115,42 +115,38 @@ public class Util {
 		return new Point(mx, my, mz);
 	}
 	
+ // REturns an array with all rotations around the "z" axis	
+	public static Point[][] rotations (Point[] block) {
+		Point[] [] result = new Point[4][];
+		result[0] = block;
+		result[1]  =rotZ ( block);
+		result[2]  =rotZ ( result[1]);
+		result[3]  =rotZ ( result[2]);
+		return result;
+	};
 	
-//	public static Point[][] rotations (Point[] block) {
-//		return null;
-//	}
 //	
 //	// Rotation um die Z Achse, "Gegen den Uhrzeigersinn"
-//	public static Point[] rotZ (Point [] block) {
-//		// Defensive copy
-//		LinkedList<Point> result = new LinkedList<Point>();
-//		Point minCoords = minCoords(block);
-//		
-//		for (Point p : block) {
-//			// Verschiebe Block zu 0/0
-//			int transX = p.x - minCoords.x;
-//			int transY = p.y - minCoords.y;
-//			
-//			int newy = transX;
-//			int newX = -transY;
-//			
-//			result.add()
-//			
-//			// 1/1 => -1,1
-//			 // 0/0=>
-//			
-//			
-//		}
-//		
-//		
-//		
-//		
-//		
-//		return block;
-//		
-//		
-//		
-//	}
+	public static Point[] rotZ (Point [] block) {
+		// Defensive copy
+		LinkedList<Point> result = new LinkedList<Point>();
+		Point minCoords = minCoords(block);
+		
+		for (Point p : block) {
+			// Verschiebe Block zu 0/0
+			int transX = p.x - minCoords.x;
+			int transY = p.y - minCoords.y;
+			
+			int newY = transX;
+			int newX = -transY;
+			
+			result.add(new Point (newX+minCoords.x, newY+minCoords.y, p.z));
+		}
+		return block;
+	}
+
+	
+	
 	
 	//** Render the JSON Representation for this board **/
 	public static String toString (byte[][][] points) {
