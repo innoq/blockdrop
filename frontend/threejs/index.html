@@ -4,9 +4,7 @@
     <link rel="stylesheet" href="styles/bootstrap.css">
     <script src="js/Three.js"> </script>
     <script>
-      /**
-Ajax Request
-       */
+      /** Ajax Request */
 
       var xmlHttp = null;
 
@@ -18,60 +16,61 @@ Ajax Request
         xmlHttp.send(null);
       }
 
-function processBoardRequest() {
-	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-		if (xmlHttp.responseText == "Not found") {
-			document.getElementById("infoField").innerHTML = "Nothing found";
-		} else {
-			var value = JSON.parse(xmlHttp.responseText);
-			update(value);
-		}
-	}
-}
+      function processBoardRequest() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          if (xmlHttp.responseText == "Not found") {
+            document.getElementById("infoField").innerHTML = "Nothing found";
+          } else {
+            var value = JSON.parse(xmlHttp.responseText);
+            update(value);
+          }
+        }
+      }
 
-var iFrequency = 500; // in ms
-var myInterval = 0;
+      var iFrequency = 500; // in ms
+      var myInterval = 0;
 
-function stopLoop() {
-	clearInterval(myInterval);
-}
+      function stopLoop() {
+        clearInterval(myInterval);
+      }
 
-function startLoop() {
-	if(myInterval > 0) clearInterval(myInterval);  // stop
-	myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
-}
+      function startLoop() {
+        if(myInterval > 0) clearInterval(myInterval);  // stop
+        myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
+      }
 
-var polling = true;
+      var polling = true;
 
-function startStopPolling() {
-	if(polling) {
-		polling = false;
-		stopLoop();
-		document.getElementById("pollSwitch").value = "Start Polling";
-	} else {
-		polling = true;
-		startLoop();
-		document.getElementById("pollSwitch").value = "Stop Polling";
-	}
-}
+      function startStopPolling() {
+        if(polling) {
+          polling = false;
+          stopLoop();
+          document.getElementById("pollSwitch").value = "Start Polling";
+        } else {
+          polling = true;
+          startLoop();
+          document.getElementById("pollSwitch").value = "Stop Polling";
+        }
+      }
 
-getBoardInfo();
-startLoop();
+      getBoardInfo();
+      startLoop();
 		
 		
-      /**
-    THREE.js
-       */
+      /** THREE.js */
 		
       var WIDTH = 940;
       var HEIGHT = 600;
       var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
-      var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
+      var cubeGeo = new THREE.CubeGeometry(98, 98, 98);
       var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
+      var cubeTransMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading, opacity: 0.75 } );
             
       var cubes = new Array();
       var cage = new Array();
       var three, cube;
+      var frontCamera = false;
+      var showCage = false;
             
       function cubeUp() {
         var x, y;		
@@ -113,27 +112,36 @@ startLoop();
         var positions = JSON.parse(document.getElementById('input').value);
         update(positions);
       }
-			var frontCamera = false;
 			
-			function switchCameraView() {
-				if(frontCamera) {
-					frontCamera = false;
-					cameraBack();
-				} else {
-					frontCamera = true;
-					cameraFront();
-				}
-			}
+      function switchCameraView() {
+        if(frontCamera) {
+          frontCamera = false;
+          cameraBack();
+        } else {
+          frontCamera = true;
+          cameraFront();
+        }
+      }
+      
+      function switchCage() {
+        if(showCage) {
+          showCage = false;
+          toggleCage(showCage);
+        } else {
+          showCage = true;
+          toggleCage(showCage);
+        }
+      }
 			
-			function cameraBack() {
-				camera.position.x = -750;
-				camera.position.y = -750;
-				camera.position.z = 1500;
+      function cameraBack() {
+        camera.position.x = -750;
+        camera.position.y = -750;
+        camera.position.z = 1500;
 
-                camera.up = new THREE.Vector3(0, 0, 1);
-                camera.lookAt(new THREE.Vector3(0,0,750));
-                render();
-            }
+        camera.up = new THREE.Vector3(0, 0, 1);
+        camera.lookAt(new THREE.Vector3(0,0,750));
+        render();
+      }
 			
       function cameraFront() {
         camera.position.z = 1500;
@@ -153,21 +161,26 @@ startLoop();
       }
             
       function worldPos(pos) {
-        pos[0] = pos[0] * 100 + 50;
-        pos[1] = pos[1] * 100 + 50;
-        pos[2] = pos[2] * 100 + 50;
+        pos[0] = pos[0] * 100 + 49;
+        pos[1] = pos[1] * 100 + 49;
+        pos[2] = pos[2] * 100 + 49;
         return pos;
       }
 			
       function drawCube(pos) {
               
-        var c = new THREE.Mesh(cubeGeo, cubeMaterial);
+        var c;
         pos = worldPos(pos);
-                
+        
+        if (pos[2] > 1000) {
+          c = new THREE.Mesh(cubeGeo, cubeTransMaterial); 
+        } else {
+          c = new THREE.Mesh(cubeGeo, cubeMaterial); 
+        }
+        
         c.position.x = pos[0];
         c.position.y = pos[1];
         c.position.z = pos[2];
-                
                 
         // set the geometry to dynamic
         // so that it allow updates
@@ -187,7 +200,7 @@ startLoop();
         clearGrid();				
                 
         for (var i = 0; i < positions.length; i++) {
-            drawCube(positions[i]);
+          drawCube(positions[i]);
         }
                 
         render();
@@ -299,8 +312,7 @@ startLoop();
         cage.push(line);
       }
       
-      function toggleCage() {
-        var show = true;
+      function toggleCage(show) {
         
         for(var i = 0; i < cage.length; i++) {
           if (show) {
@@ -379,10 +391,10 @@ startLoop();
         three.renderer.render(three.scene, three.camera);
       }
 
-function clearMap() {
-	clearGrid();
-	render();
-}
+      function clearMap() {
+        clearGrid();
+        render();
+      }
 		         
 		
       window.onload = function(){
@@ -426,6 +438,8 @@ function clearMap() {
         drawBaseGrid();
                 
         addLight();
+        
+        drawCage();
                 
         render();				
       };
@@ -439,12 +453,12 @@ function clearMap() {
           <hr/>
         </div>
       </div>
-      
+
       <div class="row">      
         <div id="canvas" class="span16">
         </div>
       </div>
-        
+
       <div class="row">      
         <div class="span4">
           <h2>Controls:</h2>
@@ -455,9 +469,10 @@ function clearMap() {
           <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
           <input class="btn" type="button" onClick="startStopPolling()" value="Stop Polling" id="pollSwitch" />
           <input class="btn" type="button" onClick="clearMap()" value="Clear Map" id="fieldClear" />
+          <input class="btn" type="button" onClick="switchCage()" value="Toggle cage view" id="cageSwitch" />
         </div>
         <div class="span4">
-        <h2>Positions:</h2>
+          <h2>Positions:</h2>
           <textarea id="input" cols="40" rows="5"></textarea>
           <br/>
           <input class="btn" type="button" onClick="renderPositions()" value="Render" />
