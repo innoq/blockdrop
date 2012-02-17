@@ -8,12 +8,13 @@
 		
 			var WIDTH = 1000;
 			var HEIGHT = 800;
-			var backCamera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
+			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
 			var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
 			var cubeMaterial = new THREE.MeshNormalMaterial();
 			var cubes = new Array();
 			var three, cube;
-			
+            
+            
 			function cubeUp() {
 				var x, y;		
 			    x = cube.position.x;
@@ -49,11 +50,30 @@
 				cube.geometry.dynamic = true;
 				render();
 			}
-			
+            
 			function getPositions() {
 				return new Array([0,0,1], [1,1,0], [2,3,4]);	
 			}
+            
+			function cameraBack() {
+				camera.position.x = -750;
+				camera.position.y = -750;
+				camera.position.z = 1500;
+
+				camera.up = new THREE.Vector3(0, 0, 1);
+				camera.lookAt(new THREE.Vector3(0,0,750));
+				render();
+			}
 			
+			function cameraFront() {
+				camera.position.z = 1500;
+				camera.position.x = 1250;
+				camera.position.y = 1250;
+				camera.up = new THREE.Vector3( 0, 0, 1 );
+				camera.lookAt(new THREE.Vector3(0,0,350));
+				render();
+			}
+            
 			function clearGrid() {
 				for(var i = 0; i < cubes.length; i++) {
 					three.scene.removeObject(cubes[i]);
@@ -84,7 +104,7 @@
 			}
 			
 			function update() {
-				
+              
 				var positions;
 				
 				clearGrid();
@@ -166,27 +186,25 @@
 				
 				three.scene.add(cube);
 			}
+			  
 			
 			function render() {
 				 three.renderer.render(three.scene, three.camera);
 			}
+		         
 		
 		    window.onload = function(){
 			
-			    var angularSpeed = 0.2; // revolutions per second
-		        var lastTime = 0;
-
-		        var renderer = new THREE.WebGLRenderer();
+			    var renderer = new THREE.WebGLRenderer();
 		        renderer.setSize(WIDTH, HEIGHT);
 		        document.body.appendChild(renderer.domElement);
-		
-		        var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
-		        
+ 				
 				camera.position.x = -750;
 				camera.position.y = -750;
 				camera.position.z = 1500;
-				
+
 				camera.up = new THREE.Vector3(0, 0, 1);
+                
 				camera.lookAt(new THREE.Vector3(0, 0, 750));
 								
 				// scene
@@ -227,5 +245,7 @@
 		<input type="button" onClick="cubeUp()" value="up" />
 		<input type="button" onClick="cubeDown()" value="down" />
 		<input type="button" onClick="cubeRight()" value="right" />
+		<input type="button" onClick="cameraBack()" value="back" />
+		<input type="button" onClick="cameraFront()" value="front" />
     </body>
 </html>
