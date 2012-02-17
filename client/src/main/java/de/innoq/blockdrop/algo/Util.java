@@ -40,31 +40,32 @@ public class Util {
 	 * a new Baord representing the Result;
 	 * 
 	 * @param board
-	 * @param currentBlock
+	 * @param block
 	 * @param xOffset
 	 * @param yOffset
 	 * @return
 	 */
-	private byte[][][] dropBlockOnOffset(byte[][][] board, Point[] currentBlock,
+	public static byte[][][] dropBlockOnOffset(byte[][][] board, Point[] block,
 			int xOffset, int yOffset) {
 		
 		byte[][][] result = Arrays.copyOf(board,board.length);
 		
 	
 		int zOffset = 0;
-		while (testFits (board, currentBlock, xOffset,yOffset,zOffset)) {
-			zOffset += 1;
+		
+		while (testFits (board, block, xOffset,yOffset,zOffset)) {
+			zOffset -= 1;
 		}
 		
+		zOffset +=1;
 		
+		// Merge the Block into the board on its final position
 		
-	//	Point[] result = new Point[board.length + currentBlock.length];
-
-		// Point]
-		// System.arraycopy(paramObject1, paramInt1, paramObject2, paramInt2,
-		// paramInt3)
-		// TODO Auto-generated method stub
-		return null;
+		for (Point p : block) {
+			result [p.x+xOffset][p.y + yOffset][p.z+zOffset] = 1;
+		}
+		
+		return result;
 	}
 	
 	public static boolean testFits (byte[][][] board, Point[] block,int xOffset, int yOffset, int zOffset) {
