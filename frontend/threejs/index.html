@@ -164,7 +164,7 @@ startLoop();
 				}
 				render();
 			}
-			
+	
 			function drawCoordinateSystem() {
 				// COORDINATE SYS
 				var line, lineGeometry;
@@ -221,7 +221,6 @@ startLoop();
 				three.scene.add( new THREE.AmbientLight( 0x202020 ) );
 
 				var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
-
 
 				directionalLight.position.x = Math.random() - 0.5;
 				directionalLight.position.y = Math.random() - 0.5;
@@ -295,7 +294,6 @@ startLoop();
 		        };
                 
                 drawCoordinateSystem();
-
 				drawBaseGrid();
                 
                 addLight();
