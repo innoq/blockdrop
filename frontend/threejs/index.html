@@ -10,10 +10,10 @@
 			var HEIGHT = 800;
 			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
 			var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
-			var cubeMaterial = new THREE.MeshNormalMaterial();
+			var cubeMaterial = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } );
+            
 			var cubes = new Array();
 			var three, cube;
-            
             
 			function cubeUp() {
 				var x, y;		
@@ -81,13 +81,23 @@
 				
 				cubes = new Array();
 			}
+            
+            function worldPos(pos) {
+              pos[0] = pos[0] + 50;
+              pos[1] = pos[1] + 50;
+              pos[2] = pos[2] + 50;
+              return pos;
+            }
 			
-			function drawCube(pos) {              
+			function drawCube(pos) {
+              
 				var c = new THREE.Mesh(cubeGeo, cubeMaterial);
-				
-                c.postion.x = pos[0];
-				c.postion.y = pos[1];
-				c.postion.z = pos[2];
+                pos = worldPos(pos);
+                
+                c.position.x = pos[0];
+				c.position.y = pos[1];
+				c.position.z = pos[2];
+                
                 
                 // set the geometry to dynamic
 				// so that it allow updates
@@ -105,15 +115,18 @@
 			
 			function update() {
               
+              
 				var positions;
 				
 				clearGrid();
 				
 				positions = getPositions(); 
 				
-				for (var i = 0; i < positions.length; i++) {
-					drawCube(positions[i]);
+				for (var i = 0; i <= 1000; i+= 100) {
+					drawCube(new Array(0, 0, i + 50));
 				}
+                
+                
 				
 				render();
 			}
@@ -167,8 +180,26 @@
 					three.scene.add( line );
 				}
 			}
+            
+            function addLight() {
+              // Lights
+
+				three.scene.add( new THREE.AmbientLight( 0x202020 ) );
+
+				var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+
+				directionalLight.position.x = Math.random() - 0.5;
+				directionalLight.position.y = Math.random() - 0.5;
+				directionalLight.position.z = Math.random() - 0.5;
+
+				directionalLight.position.normalize();
+
+				three.scene.add( directionalLight );
+            }
 			
 			function initCube() {
+              
+                cube = new THREE.Mesh(cubeGeo, cubeMaterial);
 				
 				cube.position.x = 50;
 				cube.position.y = 50;
@@ -231,6 +262,8 @@
                 drawCoordinateSystem();
 				
 				drawBaseGrid();
+                
+                addLight();
                 
 				initCube(scene);
                 
