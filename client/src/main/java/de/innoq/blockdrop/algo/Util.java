@@ -113,6 +113,30 @@ public class Util {
 		}
 		return new Point(mx, my, mz);
 	}
-	
-	
+	//** Render the JSON Representation for this board **/
+	public static String toString (byte[][][] points) {
+		StringBuffer buf = new StringBuffer();
+		buf.append ("[");		
+		boolean first = true;
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 5; y++) {
+				for (int z = 0; z < 10; z++) {
+					if (!first) {
+						buf.append(",");
+					}
+					if (points[x][y][z] == 1) {
+						buf.append ("[");						
+						buf.append (x);
+						buf.append (",");
+						buf.append (y);
+						buf.append (",");
+						buf.append (z);
+						buf.append ("]");
+					}
+				}
+			}
+		}
+		buf.append ("]");		
+		return buf.toString();
+	}
 }

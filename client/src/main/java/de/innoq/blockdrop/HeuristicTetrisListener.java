@@ -17,6 +17,7 @@ public class HeuristicTetrisListener implements TetrisListener {
 	// TODO Use a better heuristic here
 	private Heuristic  heuristic = new BoardScoreHeuristic();
 
+	private long handled = 0;
 	@Override
 	public void setServer(TetrisServer server) {
 		this.server = server;
@@ -27,7 +28,15 @@ public class HeuristicTetrisListener implements TetrisListener {
 	public void next(Point[] currentBlock, Point[] fixed) {
 		List<Operation> operations = heuristic.calculateMoves(currentBlock, fixed);
 		System.out.println ("Operatiosn to send is "+ operations);
+		try {
+			Thread.sleep (1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		server.doOperations(operations);
+		handled += 1;
+		System.out.println ("Dropped "+handled + handled);
 	}
 
 }

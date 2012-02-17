@@ -9,10 +9,10 @@ import static de.innoq.blockdrop.algo.Util.testFits;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.innoq.blockdrop.algo.HeightScoreFunction;
-import de.innoq.blockdrop.algo.HolesScoreFunction;
+import de.innoq.blockdrop.algo.CombinedScoreFunction;
 import de.innoq.blockdrop.algo.Operation;
 import de.innoq.blockdrop.algo.ScoreFunction;
+import de.innoq.blockdrop.algo.Util;
 import de.innoq.blockdrop.model.Point;
 
 /**
@@ -22,8 +22,7 @@ import de.innoq.blockdrop.model.Point;
  */
 public class BoardScoreHeuristic implements Heuristic {
 
-	// Score Function can later be replaced with other ones
-	private ScoreFunction scoreFunction = new HolesScoreFunction();
+	private ScoreFunction scoreFunction = new CombinedScoreFunction();
 
 	@Override
 	public List<Operation> calculateMoves(Point[] currentBlock, Point[] fixed) {
@@ -51,7 +50,7 @@ public class BoardScoreHeuristic implements Heuristic {
 					
 					int newScore = scoreFunction.score(newBoard);
 					System.out.println ("Score for "+x+"/"+y+" is "+ newScore);
-					System.out.println ("Board for "+x+"/"+y+" is "+ newBoard);
+					System.out.println ("Board for "+x+"/"+y+" is "+ Util.toString (newBoard));
 					if (newScore < bestScore) {
 						bestScore = newScore;
 						bestX = x;
@@ -82,6 +81,7 @@ public class BoardScoreHeuristic implements Heuristic {
 			result.add(Operation.minusY);
 		}
 		
+		result.add (Operation.drop);
 		return result;
 	}
 
