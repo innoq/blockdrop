@@ -62,6 +62,41 @@ public class UtilTest {
 		assertTrue (Util.testFits(board, block, 0, 0, -9));
 		// Der zweite Quader
 		assertFalse (Util.testFits(board, block, 4, 0, -10));
+
+	}
+	
+	@Test
+	public void testBlockOnOffset(){
+		// Start with an empty board
+		byte[][][] board = new byte[5][5][10];
 		
+		// Lets drop a simple Block
+	 	Point[] block = new Point[]{
+				point (0,0,10)
+			};
+				
+		board = Util.dropBlockOnOffset(board, block, 0, 0);
+		// The BLock should now be on the bottom, other fields empty
+		assertEquals (board[0][0][0],1);
+		assertEquals (board[0][0][9],0);
+		assertEquals (board[0][0][1],0);
+		
+		// Stack another bigger block onto:
+	 	block = new Point[]{
+				point (0,0,10),
+				point (0,0,9),
+				point (1,0,9),
+				point (2,0,9)				
+			};
+				
+		board = Util.dropBlockOnOffset(board, block, 0, 0);
+		assertEquals (board[0][0][0],1); // The first Block we droped
+		// The second one stacked upon:
+		assertEquals (board[0][0][1],1);
+		assertEquals (board[0][0][2],1);
+		assertEquals (board[1][0][1],1);
+		assertEquals (board[2][0][1],1);
+		
+		assertEquals (board[3][0][1],0);		
 	}
 }
