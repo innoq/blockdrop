@@ -49,7 +49,7 @@ startLoop();
 			var HEIGHT = 800;
 			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
 			var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
-			var cubeMaterial = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } );
+			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
             
 			var cubes = new Array();
 			var three, cube;
@@ -225,6 +225,7 @@ startLoop();
 
 				var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
 
+
 				directionalLight.position.x = Math.random() - 0.5;
 				directionalLight.position.y = Math.random() - 0.5;
 				directionalLight.position.z = Math.random() - 0.5;
@@ -263,7 +264,7 @@ startLoop();
 		
 		    window.onload = function(){
 			
-			    var renderer = new THREE.WebGLRenderer();
+			    var renderer = new THREE.WebGLRenderer({antialias: true});
 		        renderer.setSize(WIDTH, HEIGHT);
 		        document.body.appendChild(renderer.domElement);
  				
@@ -297,7 +298,7 @@ startLoop();
 		        };
                 
                 drawCoordinateSystem();
-			
+
 				drawBaseGrid();
                 
                 addLight();

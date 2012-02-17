@@ -10,5 +10,5 @@ public interface ScoreFunction {
 	 * @param board
 	 * @return
 	 */
-	public int score(Point[] board);
+	public int score(byte[][][] board);
 }
