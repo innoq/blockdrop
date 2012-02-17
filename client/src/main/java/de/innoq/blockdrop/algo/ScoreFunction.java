@@ -1,6 +1,5 @@
 package de.innoq.blockdrop.algo;
 
-import de.innoq.blockdrop.model.Point;
 
 public interface ScoreFunction {
 

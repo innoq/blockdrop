@@ -1,21 +1,22 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-		<script src="js/Three.js"> </script>
-		<script>
-/**
+  <head>
+    <link rel="stylesheet" href="styles/bootstrap.css">
+    <script src="js/Three.js"> </script>
+    <script>
+      /**
 Ajax Request
-*/
+       */
 
-var xmlHttp = null;
+      var xmlHttp = null;
 
-function getBoardInfo() {
-	var Url = "http://127.0.0.1:9998/board";
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.onreadystatechange = processBoardRequest;
-	xmlHttp.open("GET", Url, true);
-	xmlHttp.send(null);
-}
+      function getBoardInfo() {
+        var Url = "http://127.0.0.1:9998/board";
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = processBoardRequest;
+        xmlHttp.open("GET", Url, true);
+        xmlHttp.send(null);
+      }
 
 function processBoardRequest() {
 	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
@@ -56,56 +57,59 @@ getBoardInfo();
 startLoop();
 		
 		
+      /**
+    THREE.js
+       */
 		
-		/**
-		THREE.js
-		*/
-		
-			var WIDTH = 1000;
-			var HEIGHT = 800;
-			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
-			var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
-			var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
+      var WIDTH = 940;
+      var HEIGHT = 600;
+      var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
+      var cubeGeo = new THREE.CubeGeometry(100, 100, 100);
+      var cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xdddddd, shading: THREE.SmoothShading } );
             
-			var cubes = new Array();
-			var three, cube;
+      var cubes = new Array();
+      var three, cube;
             
-			function cubeUp() {
-				var x, y;		
-			    x = cube.position.x;
-				cube.position.x = x + 100;
-				y = cube.position.y;
-				cube.position.y = y + 100;
-				cube.geometry.dynamic = true;
-				render();
-			}
+      function cubeUp() {
+        var x, y;		
+        x = cube.position.x;
+        cube.position.x = x + 100;
+        y = cube.position.y;
+        cube.position.y = y + 100;
+        cube.geometry.dynamic = true;
+        render();
+      }
 			
-			function cubeLeft() {
-				var y;		
-			    y = cube.position.y;
-				cube.position.y = y + 100;
-				cube.geometry.dynamic = true;
-				render();
-			}
+      function cubeLeft() {
+        var y;		
+        y = cube.position.y;
+        cube.position.y = y + 100;
+        cube.geometry.dynamic = true;
+        render();
+      }
 			
-			function cubeRight() {
-				var x;		
-			    x = cube.position.x;
-				cube.position.x = x + 100;
-				cube.geometry.dynamic = true;
-				render();
-			}
+      function cubeRight() {
+        var x;		
+        x = cube.position.x;
+        cube.position.x = x + 100;
+        cube.geometry.dynamic = true;
+        render();
+      }
 			
-			function cubeDown() {
-				var x, y;		
-			    x = cube.position.x;
-				cube.position.x = x - 100;
-				y = cube.position.y;
-				cube.position.y = y - 100;
-				cube.geometry.dynamic = true;
-				render();
-			}
-			
+      function cubeDown() {
+        var x, y;		
+        x = cube.position.x;
+        cube.position.x = x - 100;
+        y = cube.position.y;
+        cube.position.y = y - 100;
+        cube.geometry.dynamic = true;
+        render();
+      }
+            
+      function renderPositions() {
+        var positions = JSON.parse(document.getElementById('input'));
+        update(positions);
+      }
 			var frontCamera = false;
 			
 			function switchCameraView() {
@@ -123,221 +127,242 @@ startLoop();
 				camera.position.y = -750;
 				camera.position.z = 1500;
 
-				camera.up = new THREE.Vector3(0, 0, 1);
-				camera.lookAt(new THREE.Vector3(0,0,750));
-				render();
-			}
-			
-			function cameraFront() {
-				camera.position.z = 1500;
-				camera.position.x = 1250;
-				camera.position.y = 1250;
-				camera.up = new THREE.Vector3( 0, 0, 1 );
-				camera.lookAt(new THREE.Vector3(0,0,350));
-				render();
-			}
-            
-			function clearGrid() {
-				for(var i = 0; i < cubes.length; i++) {
-					three.scene.removeObject(cubes[i]);
-				}
-				
-				cubes = new Array();
-			}
-            
-            function worldPos(pos) {
-              pos[0] = pos[0]*100 + 50;
-              pos[1] = pos[1]*100 + 50;
-              pos[2] = pos[2]*100 + 50;
-              return pos;
+                camera.up = new THREE.Vector3(0, 0, 1);
+                camera.lookAt(new THREE.Vector3(0,0,750));
+                render();
             }
 			
-			function drawCube(pos) {
-              
-				var c = new THREE.Mesh(cubeGeo, cubeMaterial);
-                pos = worldPos(pos);
-                
-                c.position.x = pos[0];
-				c.position.y = pos[1];
-				c.position.z = pos[2];
-                
-                
-                // set the geometry to dynamic
-				// so that it allow updates
-				c.geometry.dynamic = true;
-
-				// changes to the vertices
-				c.geometry.__dirtyVertices = true;
-
-				// changes to the normals
-				c.geometry.__dirtyNormals = true;
-                
-				three.scene.add(c);
-				cubes.push(c);
-			}
-			
-			function update(positions) {
-              
-				
-				clearGrid();
-				
-				
-				for (var i = 0; i < positions.length; i+= 1) {
-					
-					drawCube(positions[i]);
-				}
-				render();
-			}
-			
-			function drawCoordinateSystem() {
-				// COORDINATE SYS
-				var line, lineGeometry;
-
-				// x - red
-				lineGeometry = new THREE.Geometry();
-				lineGeometry.vertices.push( new THREE.Vertex() );
-				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 1000, 0, 0 ) ) );
-				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0xff0000 } ) );
-				three.scene.add( line );
-
-				// y - green
-				lineGeometry = new THREE.Geometry();
-				lineGeometry.vertices.push( new THREE.Vertex() );
-				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 1000, 0 ) ) );
-				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x00ff00 } ) );
-				three.scene.add( line );
-
-				// z - blue
-				// lineGeometry = new THREE.Geometry();
-				// lineGeometry.vertices.push( new THREE.Vertex() );
-				// lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
-				// line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
-				// three.scene.add( line );
-			}
-			
-			function drawBaseGrid() {
-				var line, lineGeo, p1, p2;
-				
-				for (var i = 100; i <= 500; i = i + 100) {
-					p1 = new THREE.Vertex( new THREE.Vector3( 0, i, 0 ) );
-					p2 = new THREE.Vertex( new THREE.Vector3( 500, i, 0 ) );
-					lineGeo = new THREE.Geometry();
-					lineGeo.vertices.push( p1 );
-					lineGeo.vertices.push( p2 );
-				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
-					three.scene.add( line );
-				}
-				
-				for (var i = 100; i <= 500; i = i + 100) {
-					p1 = new THREE.Vertex( new THREE.Vector3( i, 0, 0 ) );
-					p2 = new THREE.Vertex( new THREE.Vector3( i, 500, 0 ) );
-					lineGeo = new THREE.Geometry();
-					lineGeo.vertices.push( p1 );
-					lineGeo.vertices.push( p2 );
-				 	line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
-					three.scene.add( line );
-				}
-			}
+      function cameraFront() {
+        camera.position.z = 1500;
+        camera.position.x = 1250;
+        camera.position.y = 1250;
+        camera.up = new THREE.Vector3( 0, 0, 1 );
+        camera.lookAt(new THREE.Vector3(0,0,350));
+        render();
+      }
             
-            function addLight() {
-              // Lights
-
-				three.scene.add( new THREE.AmbientLight( 0x202020 ) );
-
-				var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
-
-				directionalLight.position.x = Math.random() - 0.5;
-				directionalLight.position.y = Math.random() - 0.5;
-				directionalLight.position.z = Math.random() - 0.5;
-
-				directionalLight.position.normalize();
-
-				three.scene.add( directionalLight );
-            }
+      function clearGrid() {
+        for(var i = 0; i < cubes.length; i++) {
+          three.scene.removeObject(cubes[i]);
+        }
+				
+        cubes = new Array();
+      }
+            
+      function worldPos(pos) {
+        pos[0] = pos[0] * 100 + 50;
+        pos[1] = pos[1] * 100 + 50;
+        pos[2] = pos[2] * 100 + 50;
+        return pos;
+      }
 			
-			function initCube() {
+      function drawCube(pos) {
               
-                cube = new THREE.Mesh(cubeGeo, cubeMaterial);
-				
-				cube.position.x = 50;
-				cube.position.y = 50;
-				cube.position.z = 50;
-				
-				// set the geometry to dynamic
-				// so that it allow updates
-				cube.geometry.dynamic = true;
+        var c = new THREE.Mesh(cubeGeo, cubeMaterial);
+        pos = worldPos(pos);
+                
+        c.position.x = pos[0];
+        c.position.y = pos[1];
+        c.position.z = pos[2];
+                
+                
+        // set the geometry to dynamic
+        // so that it allow updates
+        c.geometry.dynamic = true;
 
-				// changes to the vertices
-				cube.geometry.__dirtyVertices = true;
+        // changes to the vertices
+        c.geometry.__dirtyVertices = true;
 
-				// changes to the normals
-				cube.geometry.__dirtyNormals = true;
+        // changes to the normals
+        c.geometry.__dirtyNormals = true;
+                
+        three.scene.add(c);
+        cubes.push(c);
+      }
+			
+      function update(positions) {
+        clearGrid();				
+                
+        for (var i = 0; i < positions.length; i++) {
+            drawCube(positions[i]);
+        }
+                
+        render();
+      }
+			
+      function drawCoordinateSystem() {
+        // COORDINATE SYS
+        var line, lineGeometry;
+
+        // x - red
+        lineGeometry = new THREE.Geometry();
+        lineGeometry.vertices.push( new THREE.Vertex() );
+        lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 10000, 0, 0 ) ) );
+        line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0xff0000 } ) );
+        three.scene.add( line );
+
+        // y - green
+        lineGeometry = new THREE.Geometry();
+        lineGeometry.vertices.push( new THREE.Vertex() );
+        lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 10000, 0 ) ) );
+        line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x00ff00 } ) );
+        three.scene.add( line );
+
+        // z - blue
+        // lineGeometry = new THREE.Geometry();
+        // lineGeometry.vertices.push( new THREE.Vertex() );
+        // lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
+        // line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+        // three.scene.add( line );
+      }
+			
+      function drawBaseGrid() {
+        var line, lineGeo, p1, p2;
 				
-				three.scene.add(cube);
-			}
+        for (var i = 100; i <= 500; i = i + 100) {
+          p1 = new THREE.Vertex( new THREE.Vector3( 0, i, 0 ) );
+          p2 = new THREE.Vertex( new THREE.Vector3( 500, i, 0 ) );
+          lineGeo = new THREE.Geometry();
+          lineGeo.vertices.push( p1 );
+          lineGeo.vertices.push( p2 );
+          line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+          three.scene.add( line );
+        }
+				
+        for (var i = 100; i <= 500; i = i + 100) {
+          p1 = new THREE.Vertex( new THREE.Vector3( i, 0, 0 ) );
+          p2 = new THREE.Vertex( new THREE.Vector3( i, 500, 0 ) );
+          lineGeo = new THREE.Geometry();
+          lineGeo.vertices.push( p1 );
+          lineGeo.vertices.push( p2 );
+          line = new THREE.Line( lineGeo, new THREE.LineBasicMaterial( { color : 0x000 } ) );
+          three.scene.add( line );
+        }
+      }
+            
+      function addLight() {
+        // Lights
+
+        three.scene.add( new THREE.AmbientLight( 0x202020 ) );
+
+        var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
+
+        directionalLight.position.x = Math.random() - 0.5;
+        directionalLight.position.y = Math.random() - 0.5;
+        directionalLight.position.z = Math.random() - 0.5;
+
+        directionalLight.position.normalize();
+
+        three.scene.add( directionalLight );
+      }
+			
+      function initCube() {
+              
+        cube = new THREE.Mesh(cubeGeo, cubeMaterial);
+				
+        cube.position.x = 50;
+        cube.position.y = 50;
+        cube.position.z = 50;
+				
+        // set the geometry to dynamic
+        // so that it allow updates
+        cube.geometry.dynamic = true;
+
+        // changes to the vertices
+        cube.geometry.__dirtyVertices = true;
+
+        // changes to the normals
+        cube.geometry.__dirtyNormals = true;
+				
+        three.scene.add(cube);
+      }
 			  
 			
-			function render() {
-				 three.renderer.render(three.scene, three.camera);
-			}
+      function render() {
+        three.renderer.render(three.scene, three.camera);
+      }
 		         
 		
-		    window.onload = function(){
+      window.onload = function(){
 			
-			    var renderer = new THREE.WebGLRenderer({antialias: true});
-		        renderer.setSize(WIDTH, HEIGHT);
-		        document.body.appendChild(renderer.domElement);
+        var renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize(WIDTH, HEIGHT);
+        var canvas = document.getElementById('canvas');
+        canvas.appendChild(renderer.domElement);
  				
-				camera.position.x = -750;
-				camera.position.y = -750;
-				camera.position.z = 1500;
+        camera.position.x = -750;
+        camera.position.y = -750;
+        camera.position.z = 1500;
 
-				camera.up = new THREE.Vector3(0, 0, 1);
+        camera.up = new THREE.Vector3(0, 0, 1);
                 
-				camera.lookAt(new THREE.Vector3(0, 0, 750));
+        camera.lookAt(new THREE.Vector3(0, 0, 750));
 								
-				// scene
-		        var scene = new THREE.Scene();
+        // scene
+        var scene = new THREE.Scene();
 
-		        // plane
-		        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
-		            color: 0xeeeeee
-		        }));
-				plane.position.x = 250;
-				plane.position.y = 250;
-				plane.overdraw = true;
-				scene.add(plane);
+        // plane
+        var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
+          color: 0xeeeeee
+        }));
+        plane.position.x = 250;
+        plane.position.y = 250;
+        plane.overdraw = true;
+        scene.add(plane);
 				
 				
-		        // create wrapper object that contains three.js objects
-		        three = {
-		            renderer: renderer,
-		            camera: camera,
-		            scene: scene,
-		            plane: plane
-		        };
+        // create wrapper object that contains three.js objects
+        three = {
+          renderer: renderer,
+          camera: camera,
+          scene: scene,
+          plane: plane
+        };
                 
-                drawCoordinateSystem();
+        drawCoordinateSystem();
 
-				drawBaseGrid();
+        drawBaseGrid();
                 
-                addLight();
+        addLight();
                 
-				initCube(scene);
-				
-				render();
-                				
-		    };
-		</script>
-    </head>
-    <body>
-        <canvas id="myCanvas" width="10" height="10">
-        </canvas>
-		<input type="button" onClick="cubeLeft()" value="left" />
-		<input type="button" onClick="cubeUp()" value="up" />
-		<input type="button" onClick="cubeDown()" value="down" />
-		<input type="button" onClick="cubeRight()" value="right" />
-		<input type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
-		<div id="infoField"></div>
-    </body>
+        render();				
+      };
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">      
+        <div class="span16">
+          <h1>BLOCKDROP</h1>
+          <hr/>
+        </div>
+      </div>
+      
+      <div class="row">      
+        <div id="canvas" class="span16">
+        </div>
+      </div>
+        
+      <div class="row">      
+        <div class="span4">
+          <h2>Controls:</h2>
+          <!-- <input type="button" onClick="cubeLeft()" value="left" />
+          <input type="button" onClick="cubeUp()" value="up" />
+          <input type="button" onClick="cubeDown()" value="down" />
+          <input type="button" onClick="cubeRight()" value="right" /> -->
+          <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
+        </div>
+        <div class="span4">
+        <h2>Positions:</h2>
+          <textarea id="input" cols="40" rows="5"></textarea>
+          <br/>
+          <input class="btn" type="button" onClick="renderPositions()" value="Render" />
+        </div>
+        <div class="span4">
+          <h2>Debug:</h2>
+          <div id="infoField"></div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

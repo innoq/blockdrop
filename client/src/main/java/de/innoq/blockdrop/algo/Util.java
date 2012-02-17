@@ -1,6 +1,7 @@
 package de.innoq.blockdrop.algo;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import de.innoq.blockdrop.model.Point;
 
@@ -113,6 +114,44 @@ public class Util {
 		}
 		return new Point(mx, my, mz);
 	}
+	
+	
+//	public static Point[][] rotations (Point[] block) {
+//		return null;
+//	}
+//	
+//	// Rotation um die Z Achse, "Gegen den Uhrzeigersinn"
+//	public static Point[] rotZ (Point [] block) {
+//		// Defensive copy
+//		LinkedList<Point> result = new LinkedList<Point>();
+//		Point minCoords = minCoords(block);
+//		
+//		for (Point p : block) {
+//			// Verschiebe Block zu 0/0
+//			int transX = p.x - minCoords.x;
+//			int transY = p.y - minCoords.y;
+//			
+//			int newy = transX;
+//			int newX = -transY;
+//			
+//			result.add()
+//			
+//			// 1/1 => -1,1
+//			 // 0/0=>
+//			
+//			
+//		}
+//		
+//		
+//		
+//		
+//		
+//		return block;
+//		
+//		
+//		
+//	}
+	
 	//** Render the JSON Representation for this board **/
 	public static String toString (byte[][][] points) {
 		StringBuffer buf = new StringBuffer();
