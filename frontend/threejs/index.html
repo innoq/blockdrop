@@ -8,7 +8,7 @@
 		
 			var WIDTH = 1000;
 			var HEIGHT = 800;
-			var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
+			var backCamera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 45, 10000);
 			
 			var cube = new THREE.Mesh(new THREE.CubeGeometry(100,100,100),
 			               new THREE.MeshNormalMaterial());
@@ -50,7 +50,15 @@
 				render();
 			}
 			
-			function onDocumentKeyDown(event) {
+			function clearGrid() {
+				
+			}
+			
+			function drawCube(pos, scene) {
+				
+			}
+			
+			function update() {
 				
 			}
 			
@@ -73,11 +81,11 @@
 				scene.add( line );
 
 				// z - blue
-				lineGeometry = new THREE.Geometry();
-				lineGeometry.vertices.push( new THREE.Vertex() );
- 				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
- 				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
- 				scene.add( line );
+				// lineGeometry = new THREE.Geometry();
+				// 				lineGeometry.vertices.push( new THREE.Vertex() );
+				//  				lineGeometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 1000 ) ) );
+				//  				line = new THREE.Line( lineGeometry, new THREE.LineBasicMaterial( { color : 0x0000ff } ) );
+				//  				scene.add( line );
 			}
 			
 			function drawBaseGrid(scene) {
@@ -104,7 +112,8 @@
 				}
 			}
 			
-			function drawCubes(scene) {
+			function initCube(scene) {
+				
 				cube.position.x = 450;
 				cube.position.y = 450;
 				cube.position.z = 50;
@@ -140,12 +149,11 @@
 				camera.position.x = -750;
 				camera.position.y = -750;
 				camera.position.z = 1500;
+				
+				camera.up = new THREE.Vector3(0, 0, 1);
 				camera.lookAt(new THREE.Vector3());
-				
-				camera.rotation.z = -39.25 * (Math.PI / 180);
-				
-				
-		        // scene
+								
+				// scene
 		        var scene = new THREE.Scene();
 
 		        drawCoordinateSystem(scene);
@@ -159,9 +167,9 @@
 				plane.position.x = 250;
 				plane.position.y = 250;
 				plane.overdraw = true;
-		        scene.add(plane);
+				scene.add(plane);
 				
-				drawCubes(scene);
+				initCube(scene);
 				
 		        // create wrapper object that contains three.js objects
 		        three = {
@@ -171,10 +179,7 @@
 		            plane: plane
 		        };
 		
-				render();
-				
-				document.addEventListener( 'keydown', onDocumentKeyDown, false );
-				
+				render();				
 		    };
 		</script>
     </head>
