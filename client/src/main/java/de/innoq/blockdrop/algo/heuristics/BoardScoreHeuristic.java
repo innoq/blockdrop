@@ -33,39 +33,49 @@ public class BoardScoreHeuristic implements Heuristic {
 		Point maxCoods = maxCoords(currentBlock);
 
 		int bestScore = Integer.MAX_VALUE;
-		int bestX = -1; int bestY = -1;
+		int bestX = -1; int bestY = -1; int bestRot = -1;
 		
 		byte[][][] board = pointsToGrid(fixed);
-		for (int x = 0; x < 5; x++) {
-			for (int y = 0; y < 5; y++) {
-				// Move Block to x,y
-				int xOffset = x - minCoords.x;
-				int yOffset = y - minCoords.y;
+		
+		
+		Point[][] rotated = Util.rotations(currentBlock);
+		for (int rot = 0; rot < 4; rot++) {
+			currentBlock = rotated[rot];
+			for (int x = 0; x < 5; x++) {
+				for (int y = 0; y < 5; y++) {
+					// Move Block to x,y
+					int xOffset = x - minCoords.x;
+					int yOffset = y - minCoords.y;
 
-				// Past der Block Ÿberhaupt an der aktuellen Position?
-				if (testFits(board, currentBlock, xOffset, yOffset, 0)) {
-					// Falls Ja : Drop: 
-					byte[][][] newBoard = dropBlockOnOffset(board, currentBlock,
-						xOffset, yOffset);
-					
-					int newScore = scoreFunction.score(newBoard);
-					System.out.println ("Score for "+x+"/"+y+" is "+ newScore);
-					System.out.println ("Board for "+x+"/"+y+" is "+ Util.toString (newBoard));
-					if (newScore < bestScore) {
-						bestScore = newScore;
-						bestX = x;
-						bestY = y;
+					// Past der Block Ÿberhaupt an der aktuellen Position?
+					if (testFits(board, currentBlock, xOffset, yOffset, 0)) {
+						// Falls Ja : Drop:
+						byte[][][] newBoard = dropBlockOnOffset(board,
+								currentBlock, xOffset, yOffset);
+
+						int newScore = scoreFunction.score(newBoard);
+						System.out.println("Score for " + x + "/" + y  +" rot "+ rot+" is "
+								+ newScore);
+						System.out.println("Board for " + x + "/" + y +" rot "+ rot+ " is "
+								+ Util.toString(newBoard));
+						if (newScore < bestScore) {
+							bestScore = newScore;
+							bestX = x;
+							bestY = y;
+							bestRot = rot;
+						}
 					}
 				}
+
 			}
-		
 		}
+
 		if (bestX == -1 || bestY == -1) {
 			System.out.println ("Ups. NoMove  found?");
 			bestX = 4; bestY = 4; // Move into center...
 			
 		}
-		System.out.println ("Best Moves seems to be to "+bestX + "/"+ bestY);
+		System.out.println ("Best Moves seems to be to "+bestX + "/"+ bestY+ "rotz: "+bestRot);
 		// translate into Moves.
 		List<Operation> result = new LinkedList<Operation>();
 		for (int i = 0; i < minCoords.x - bestX; i++) {
@@ -79,6 +89,11 @@ public class BoardScoreHeuristic implements Heuristic {
 		}
 		for (int i = 0; i <  minCoords.y-bestY; i++ ) {
 			result.add(Operation.minusY);
+		}
+		
+		// Am Ziel sollte die Rotation mšglich sein..
+		for (int i = 0; i < bestRot; i++) {
+			result.add (Operation.plusRotZ);
 		}
 		
 		result.add (Operation.drop);
