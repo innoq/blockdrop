@@ -89,6 +89,18 @@ startLoop();
 				render();
 			}
 			
+			var frontCamera = false;
+			
+			function switchCameraView() {
+				if(frontCamera) {
+					frontCamera = false;
+					cameraBack();
+				} else {
+					frontCamera = true;
+					cameraFront();
+				}
+			}
+			
 			function cameraBack() {
 				camera.position.x = -750;
 				camera.position.y = -750;
@@ -308,8 +320,7 @@ startLoop();
 		<input type="button" onClick="cubeUp()" value="up" />
 		<input type="button" onClick="cubeDown()" value="down" />
 		<input type="button" onClick="cubeRight()" value="right" />
-		<input type="button" onClick="cameraBack()" value="back" />
-		<input type="button" onClick="cameraFront()" value="front" />
+		<input type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
 		<div id="infoField"></div>
     </body>
 </html>
