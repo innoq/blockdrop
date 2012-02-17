@@ -2,8 +2,8 @@ package de.innoq.blockdrop;
 
 import java.util.List;
 
-import de.innoq.blockdrop.algo.NopDropHeuristic;
 import de.innoq.blockdrop.algo.Operation;
+import de.innoq.blockdrop.algo.heuristics.BoardScoreHeuristic;
 import de.innoq.blockdrop.algo.heuristics.Heuristic;
 import de.innoq.blockdrop.model.Point;
 
@@ -15,7 +15,7 @@ public class HeuristicTetrisListener implements TetrisListener {
 
 	private TetrisServer server;
 	// TODO Use a better heuristic here
-	private Heuristic  heuristic = new NopDropHeuristic();;
+	private Heuristic  heuristic = new BoardScoreHeuristic();
 
 	@Override
 	public void setServer(TetrisServer server) {
