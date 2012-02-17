@@ -31,10 +31,27 @@ function processBoardRequest() {
 var iFrequency = 500; // in ms
 var myInterval = 0;
 
+function stopLoop() {
+	clearInterval(myInterval);
+}
+
 function startLoop() {
 	if(myInterval > 0) clearInterval(myInterval);  // stop
 	myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
 }
+
+var polling = true;
+
+function startStopPolling() {
+	if(polling) {
+		polling = false;
+		stopLoop();
+	} else {
+		polling = true;
+		startLoop();
+	}
+}
+
 getBoardInfo();
 startLoop();
 		
