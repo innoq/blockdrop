@@ -18,17 +18,16 @@ Ajax Request
         xmlHttp.send(null);
       }
 
-      function processBoardRequest() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-          if (xmlHttp.responseText == "Not found") {
-            document.getElementById("infoText").value = "Nothing found";
-          } else {
-            var value = JSON.parse(xmlHttp.responseText);
-            document.getElementById("debug").value = value;
-            update(value);
-          }
-        }
-      }
+function processBoardRequest() {
+	if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+		if (xmlHttp.responseText == "Not found") {
+			document.getElementById("infoField").innerHTML = "Nothing found";
+		} else {
+			var value = JSON.parse(xmlHttp.responseText);
+			update(value);
+		}
+	}
+}
 
       var iFrequency = 500; // in ms
       var myInterval = 0;
@@ -95,16 +94,27 @@ Ajax Request
         var positions = JSON.parse(document.getElementById('input'));
         update(positions);
       }
-            
-      function cameraBack() {
-        camera.position.x = -750;
-        camera.position.y = -750;
-        camera.position.z = 1500;
+			var frontCamera = false;
+			
+			function switchCameraView() {
+				if(frontCamera) {
+					frontCamera = false;
+					cameraBack();
+				} else {
+					frontCamera = true;
+					cameraFront();
+				}
+			}
+			
+			function cameraBack() {
+				camera.position.x = -750;
+				camera.position.y = -750;
+				camera.position.z = 1500;
 
-        camera.up = new THREE.Vector3(0, 0, 1);
-        camera.lookAt(new THREE.Vector3(0,0,750));
-        render();
-      }
+                camera.up = new THREE.Vector3(0, 0, 1);
+                camera.lookAt(new THREE.Vector3(0,0,750));
+                render();
+            }
 			
       function cameraFront() {
         camera.position.z = 1500;
@@ -299,8 +309,6 @@ Ajax Request
                 
         addLight();
                 
-        // initCube(scene);
-                
         render();				
       };
     </script>
@@ -326,7 +334,7 @@ Ajax Request
           <input type="button" onClick="cubeUp()" value="up" />
           <input type="button" onClick="cubeDown()" value="down" />
           <input type="button" onClick="cubeRight()" value="right" /> -->
-          <input class="btn" type="button" onClick="cameraBack()" value="Switch Camera" />
+          <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
         </div>
         <div class="span4">
         <h2>Positions:</h2>
@@ -336,7 +344,7 @@ Ajax Request
         </div>
         <div class="span4">
           <h2>Debug:</h2>
-          <textarea id="debug" cols="40" rows="5"> </textarea>
+          <div id="infoField"></div>
         </div>
       </div>
     </div>
