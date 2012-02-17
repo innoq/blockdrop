@@ -29,16 +29,34 @@ function processBoardRequest() {
 	}
 }
 
-      var iFrequency = 500; // in ms
-      var myInterval = 0;
+var iFrequency = 500; // in ms
+var myInterval = 0;
 
-      function startLoop() {
-        if(myInterval > 0) clearInterval(myInterval);  // stop
-        myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
-      }
-      getBoardInfo();
-      startLoop();
-		
+function stopLoop() {
+	clearInterval(myInterval);
+}
+
+function startLoop() {
+	if(myInterval > 0) clearInterval(myInterval);  // stop
+	myInterval = setInterval( "getBoardInfo()", iFrequency );  // run
+}
+
+var polling = true;
+
+function startStopPolling() {
+	if(polling) {
+		polling = false;
+		stopLoop();
+		document.getElementById("pollSwitch").value = "Start Polling";
+	} else {
+		polling = true;
+		startLoop();
+		document.getElementById("pollSwitch").value = "Stop Polling";
+	}
+}
+
+getBoardInfo();
+startLoop();
 		
 		
       /**
@@ -335,6 +353,7 @@ function processBoardRequest() {
           <input type="button" onClick="cubeDown()" value="down" />
           <input type="button" onClick="cubeRight()" value="right" /> -->
           <input class="btn" type="button" onClick="switchCameraView()" value="Switch View" id="cameraSwitch" />
+          <input class="btn" type="button" onClick="startStopPolling()" value="Stop Polling" id="pollSwitch" />
         </div>
         <div class="span4">
         <h2>Positions:</h2>
