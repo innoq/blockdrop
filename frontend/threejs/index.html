@@ -6,8 +6,11 @@
     <script>
       /** Ajax Request */
 
-      var xmlHttp = null;
+      var xmlHttp = null;           
+	var scene;
+       
 
+	
       function getBoardInfo() {
         var Url = "http://127.0.0.1:9998/board";
         xmlHttp = new XMLHttpRequest();
@@ -71,6 +74,7 @@
       var three, cube;
       var frontCamera = false;
       var showCage = false;
+	  var mRotationEnabled = false;
             
       function cubeUp() {
         var x, y;		
@@ -149,7 +153,7 @@
         camera.position.y = 1250;
         camera.up = new THREE.Vector3( 0, 0, 1 );
         camera.lookAt(new THREE.Vector3(0,0,350));
-        render();
+        render();  
       }
             
       function clearGrid() {
@@ -384,7 +388,9 @@
         cube.geometry.__dirtyNormals = true;
 				
         three.scene.add(cube);
-      }
+      } 
+
+
 			  
 			
       function render() {
@@ -395,7 +401,26 @@
         clearGrid();
         render();
       }
-		         
+	  
+	function mouseRotation() {
+        if(mRotationEnabled) {
+          mRotationEnabled = false;
+          document.getElementById("mRotationSwitch").value = "Enable mouse rotation";
+        } else {
+          mRotationEnabled = true;
+          document.getElementById("mRotationSwitch").value = "Disable mouse rotation";
+        }
+      } 
+		
+	  document.onmousemove = function(event){
+	  	if(mRotationEnabled) {
+           	var value = event.clientX * 0.1;
+           	camera.position.x = Math.cos(value) * 2000;
+	   		camera.position.y = Math.sin(value) * 2000;
+	   		camera.lookAt(new THREE.Vector3(0,0,500));  
+	  		render();
+	  	}
+      }         
 		
       window.onload = function(){
 			
@@ -413,7 +438,7 @@
         camera.lookAt(new THREE.Vector3(0, 0, 750));
 								
         // scene
-        var scene = new THREE.Scene();
+        scene = new THREE.Scene();
 
         // plane
         var plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), new THREE.MeshBasicMaterial({
@@ -470,6 +495,7 @@
           <input class="btn" type="button" onClick="startStopPolling()" value="Stop Polling" id="pollSwitch" />
           <input class="btn" type="button" onClick="clearMap()" value="Clear Map" id="fieldClear" />
           <input class="btn" type="button" onClick="switchCage()" value="Toggle cage view" id="cageSwitch" />
+		  <input class="btn" type="button" onClick="mouseRotation()" value="Enable mouse rotation" id="mRotationSwitch"
         </div>
         <div class="span4">
           <h2>Positions:</h2>
